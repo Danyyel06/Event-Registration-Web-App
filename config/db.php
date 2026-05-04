@@ -1,5 +1,5 @@
 <?php
-
+date_default_timezone_set('Africa/Lagos');
 //I want to define the database credentials as PHP constants
 define('DB_HOST', 'localhost');
 define('DB_NAME', 'event_reg_db');
