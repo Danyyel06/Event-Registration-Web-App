@@ -1,23 +1,28 @@
 <?php
 date_default_timezone_set('Africa/Lagos');
 
-// Use Railway's exact environment variables
-$host = getenv('MYSQLHOST') ?: 'localhost';
-$port = getenv('MYSQLPORT') ?: '3306';
-$db   = getenv('MYSQLDATABASE') ?: 'event_reg_db';
-$user = getenv('MYSQLUSER') ?: 'root';
-$pass = getenv('MYSQLPASSWORD') ?: '';
+define('DB_HOST', getenv('MYSQLHOST') ?: 'localhost');
+define('DB_NAME', getenv('MYSQLDATABASE') ?: 'event_reg_db');
+define('DB_USER', getenv('MYSQLUSER') ?: 'root');
+define('DB_PASS', getenv('MYSQLPASSWORD') ?: '');
+define('DB_PORT', getenv('MYSQLPORT') ?: 3306);
 
 try {
-    $dsn = "mysql:host={$host};port={$port};dbname={$db};charset=utf8mb4";
-    
-    $pdo = new PDO($dsn, $user, $pass);
+    $pdo = new PDO(
+        "mysql:host=" . DB_HOST . 
+        ";port=" . DB_PORT . 
+        ";dbname=" . DB_NAME . 
+        ";charset=utf8mb4",
+        DB_USER,
+        DB_PASS
+    );
+
     $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
     $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-    
-    echo "✅ Database Connected Successfully on Railway!";
+
+    // echo "Connected successfully"; // uncomment for testing
 
 } catch (PDOException $e) {
-    die("❌ Database connection failed: " . $e->getMessage());
+    die("Database connection failed: " . $e->getMessage());
 }
 ?>

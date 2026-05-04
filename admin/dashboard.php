@@ -259,7 +259,7 @@ $recent_events = $pdo->query('
         /* ── ACTIONS ── */
         .actions {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 1px;
             border: 1px solid var(--border);
             border-radius: 10px;
