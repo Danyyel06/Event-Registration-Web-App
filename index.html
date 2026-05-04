@@ -1,0 +1,1158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faculty Events – Register. Attend. Connect.</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --black:        #0a0a0a;
+            --ink:          #1a1a1a;
+            --ink-soft:     #525252;
+            --ink-muted:    #737373;
+            --ink-faint:    #a3a3a3;
+            --border:       #e5e5e5;
+            --border-light: #f0f0f0;
+            --bg:           #fafafa;
+            --surface:      #ffffff;
+            --hover:        #f5f5f5;
+            --font:         'Plus Jakarta Sans', sans-serif;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font);
+            background: var(--bg);
+            color: var(--ink);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* ── NAV ───────────────────────────────────────── */
+        nav {
+            background: rgba(250,250,250,0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .brand-mark {
+            width: 28px;
+            height: 28px;
+            background: var(--black);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .brand-name { font-size: .875rem; font-weight: 700; color: var(--ink); }
+
+        .nav-actions { display: flex; align-items: center; gap: .5rem; }
+
+        .nav-link {
+            font-size: .8rem;
+            color: var(--ink-muted);
+            text-decoration: none;
+            padding: 6px 10px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: color .15s, background .15s;
+        }
+
+        .nav-link:hover { color: var(--ink); background: var(--hover); }
+
+        .nav-cta {
+            font-size: .8rem;
+            font-weight: 700;
+            color: var(--surface);
+            background: var(--black);
+            text-decoration: none;
+            padding: 6px 14px;
+            border-radius: 6px;
+            transition: opacity .15s;
+        }
+
+        .nav-cta:hover { opacity: .8; }
+
+        /* ── HERO ──────────────────────────────────────── */
+        .hero {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 7rem 2rem 5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: .68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .14em;
+            color: var(--ink-faint);
+            border: 1px solid var(--border);
+            border-radius: 999px;
+            padding: 4px 12px;
+            margin-bottom: 1.5rem;
+            background: var(--surface);
+            animation: fadeUp .5s ease both;
+        }
+
+        .hero-eyebrow span { width: 6px; height: 6px; background: var(--black); border-radius: 50%; }
+
+        .hero-title {
+            font-size: clamp(2.25rem, 5vw, 3.5rem);
+            font-weight: 800;
+            color: var(--black);
+            letter-spacing: -.04em;
+            line-height: 1.08;
+            margin-bottom: 1.25rem;
+            animation: fadeUp .5s .08s ease both;
+        }
+
+        .hero-title em {
+            font-style: normal;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Underline accent on italic word */
+        .hero-title em::after {
+            content: '';
+            position: absolute;
+            bottom: 2px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--black);
+            border-radius: 2px;
+            animation: lineGrow .5s .5s ease both;
+            transform-origin: left;
+        }
+
+        @keyframes lineGrow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+        .hero-body {
+            font-size: 1rem;
+            color: var(--ink-soft);
+            line-height: 1.7;
+            margin-bottom: 2.25rem;
+            max-width: 420px;
+            animation: fadeUp .5s .16s ease both;
+        }
+
+        .hero-actions {
+            display: flex;
+            gap: .75rem;
+            flex-wrap: wrap;
+            animation: fadeUp .5s .22s ease both;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: .75rem 1.5rem;
+            background: var(--black);
+            color: white;
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: .875rem;
+            font-weight: 700;
+            transition: opacity .15s;
+        }
+
+        .btn-primary:hover { opacity: .82; }
+
+        .btn-secondary {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: .75rem 1.5rem;
+            background: var(--surface);
+            color: var(--ink);
+            border: 1px solid var(--border);
+            border-radius: 7px;
+            text-decoration: none;
+            font-size: .875rem;
+            font-weight: 600;
+            transition: background .15s;
+        }
+
+        .btn-secondary:hover { background: var(--hover); }
+
+        /* ── HERO VISUAL ───────────────────────────────── */
+        .hero-visual {
+            animation: fadeUp .5s .3s ease both;
+        }
+
+        .mockup-shell {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0,0,0,.07), 0 1px 3px rgba(0,0,0,.05);
+        }
+
+        .mockup-bar {
+            background: #fafafa;
+            border-bottom: 1px solid var(--border-light);
+            padding: .75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .dot { width: 9px; height: 9px; border-radius: 50%; }
+        .dot-r { background: #ffb3b3; }
+        .dot-y { background: #ffe0a0; }
+        .dot-g { background: #b3e6b3; }
+
+        .mockup-body { padding: 1.25rem; }
+
+        .mock-event {
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: .75rem;
+        }
+
+        .mock-event:last-child { margin-bottom: 0; }
+
+        .mock-event-head {
+            background: var(--black);
+            padding: .75rem 1rem;
+        }
+
+        .mock-event-title { font-size: .8rem; font-weight: 700; color: white; margin-bottom: 2px; }
+        .mock-event-venue { font-size: .65rem; color: rgba(255,255,255,.55); }
+
+        .mock-event-body { padding: .875rem 1rem; }
+
+        .mock-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: .75rem; }
+        .mock-date { font-size: .7rem; color: var(--ink-muted); }
+        .mock-badge { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 999px; }
+        .badge-open { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
+        .badge-warn { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
+
+        .mock-bar-wrap { height: 4px; background: var(--border-light); border-radius: 999px; overflow: hidden; margin-bottom: .5rem; }
+        .mock-bar-fill { height: 100%; background: var(--black); border-radius: 999px; }
+        .mock-bar-fill.amber { background: #f59e0b; }
+
+        .mock-seats { font-size: .65rem; color: var(--ink-faint); margin-bottom: .75rem; }
+
+        .mock-btn {
+            display: block;
+            text-align: center;
+            background: var(--black);
+            color: white;
+            font-size: .72rem;
+            font-weight: 700;
+            padding: .5rem;
+            border-radius: 5px;
+        }
+
+        .mock-btn.disabled { background: var(--border); color: var(--ink-faint); }
+
+        /* ── DIVIDER ───────────────────────────────────── */
+        .divider-line {
+            border: none;
+            border-top: 1px solid var(--border-light);
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        /* ── STATS ─────────────────────────────────────── */
+        .stats-strip {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border-light);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+        }
+
+        .stat-cell {
+            background: var(--surface);
+            padding: 2rem 1.5rem;
+            text-align: center;
+        }
+
+        .stat-cell:first-child { border-radius: 10px 0 0 10px; }
+        .stat-cell:last-child { border-radius: 0 10px 10px 0; }
+
+        .stat-num {
+            font-size: 2.25rem;
+            font-weight: 800;
+            color: var(--black);
+            letter-spacing: -.04em;
+            line-height: 1;
+            margin-bottom: .4rem;
+        }
+
+        .stat-label { font-size: .78rem; color: var(--ink-muted); font-weight: 500; }
+
+        /* ── SECTION ───────────────────────────────────── */
+        .section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        .section-eyebrow {
+            font-size: .68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .14em;
+            color: var(--ink-faint);
+            margin-bottom: .75rem;
+        }
+
+        .section-title {
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 800;
+            color: var(--black);
+            letter-spacing: -.035em;
+            line-height: 1.1;
+            margin-bottom: 1rem;
+        }
+
+        .section-sub {
+            font-size: .9375rem;
+            color: var(--ink-soft);
+            max-width: 520px;
+            line-height: 1.7;
+        }
+
+        /* ── FEATURES ──────────────────────────────────── */
+        .features-header { margin-bottom: 3rem; }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            padding: 2rem 1.75rem;
+            transition: background .15s;
+        }
+
+        .feature-card:hover { background: var(--hover); }
+
+        .feature-icon {
+            width: 36px;
+            height: 36px;
+            background: var(--black);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            margin-bottom: 1.25rem;
+        }
+
+        .feature-title {
+            font-size: .9375rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: .5rem;
+        }
+
+        .feature-body {
+            font-size: .83rem;
+            color: var(--ink-muted);
+            line-height: 1.65;
+        }
+
+        /* ── WHO IT'S FOR ──────────────────────────────── */
+        .users-section { background: var(--black); }
+
+        .users-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        .users-eyebrow {
+            font-size: .68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .14em;
+            color: rgba(255,255,255,.35);
+            margin-bottom: .75rem;
+        }
+
+        .users-title {
+            font-size: clamp(1.75rem, 3vw, 2.5rem);
+            font-weight: 800;
+            color: white;
+            letter-spacing: -.035em;
+            line-height: 1.1;
+            margin-bottom: 3rem;
+        }
+
+        .users-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        .user-card {
+            border: 1px solid rgba(255,255,255,.1);
+            border-radius: 10px;
+            padding: 2rem;
+            background: rgba(255,255,255,.03);
+            transition: background .15s, border-color .15s;
+        }
+
+        .user-card:hover { background: rgba(255,255,255,.06); border-color: rgba(255,255,255,.18); }
+
+        .user-role {
+            font-size: .68rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: .12em;
+            color: rgba(255,255,255,.4);
+            margin-bottom: .75rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .user-role::before {
+            content: '';
+            width: 18px;
+            height: 1px;
+            background: rgba(255,255,255,.25);
+        }
+
+        .user-heading {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: .6rem;
+            letter-spacing: -.02em;
+        }
+
+        .user-body {
+            font-size: .83rem;
+            color: rgba(255,255,255,.5);
+            line-height: 1.7;
+        }
+
+        .user-perks {
+            margin-top: 1.25rem;
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: .45rem;
+        }
+
+        .user-perks li {
+            font-size: .78rem;
+            color: rgba(255,255,255,.6);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .user-perks li::before {
+            content: '✓';
+            font-size: .72rem;
+            color: rgba(255,255,255,.35);
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+
+        /* ── HOW IT WORKS ──────────────────────────────── */
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: var(--border);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 3rem;
+        }
+
+        .step-card {
+            background: var(--surface);
+            padding: 2rem 1.5rem;
+            position: relative;
+        }
+
+        .step-num {
+            font-size: .68rem;
+            font-weight: 700;
+            color: var(--ink-faint);
+            margin-bottom: 1rem;
+            letter-spacing: .04em;
+        }
+
+        .step-title {
+            font-size: .9375rem;
+            font-weight: 700;
+            color: var(--black);
+            margin-bottom: .5rem;
+        }
+
+        .step-body { font-size: .8rem; color: var(--ink-muted); line-height: 1.65; }
+
+        /* ── CTA SECTION ───────────────────────────────── */
+        .cta-section {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 3rem 2rem 6rem;
+        }
+
+        .cta-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 4rem 3rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        .cta-title {
+            font-size: clamp(1.5rem, 2.5vw, 2rem);
+            font-weight: 800;
+            color: var(--black);
+            letter-spacing: -.035em;
+            margin-bottom: .75rem;
+        }
+
+        .cta-sub { font-size: .9rem; color: var(--ink-muted); line-height: 1.6; max-width: 440px; }
+
+        .cta-actions { display: flex; flex-direction: column; gap: .75rem; align-items: flex-end; }
+
+        /* ── FOOTER ────────────────────────────────────── */
+        footer {
+            border-top: 1px solid var(--border);
+            background: var(--surface);
+        }
+
+        .footer-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .footer-copy { font-size: .75rem; color: var(--ink-faint); }
+
+        /* ── ANIMATIONS ────────────────────────────────── */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(16px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(18px);
+            transition: opacity .55s ease, transform .55s ease;
+        }
+
+        .reveal.in { opacity: 1; transform: translateY(0); }
+
+        /* ══════════════════════════════════════════════════
+           RESPONSIVE — full breakpoint ladder
+           ── xs  : < 400px   (small phones, e.g. SE)
+           ── sm  : 400–599px (regular phones)
+           ── md  : 600–767px (large phones / small tablets)
+           ── lg  : 768–1023px (tablets / small laptops)
+           ── xl  : 1024–1279px (laptops)
+           ── 2xl : ≥ 1280px  (large desktops)
+           ══════════════════════════════════════════════════ */
+
+        /* ── xs: very small phones (< 400px) ──────────── */
+        @media (max-width: 399px) {
+            /* Nav */
+            .nav-inner { padding: 0 1rem; }
+            .nav-link  { display: none; }
+            .brand-name { font-size: .8rem; }
+            .nav-cta { padding: 5px 10px; font-size: .75rem; }
+
+            /* Hero */
+            .hero { padding: 2.5rem 1rem 2rem; gap: 2rem; grid-template-columns: 1fr; }
+            .hero-visual { order: -1; }
+            .hero-eyebrow { font-size: .6rem; padding: 3px 10px; }
+            .hero-title { font-size: 1.75rem; letter-spacing: -.03em; }
+            .hero-body { font-size: .875rem; margin-bottom: 1.75rem; }
+            .hero-actions { flex-direction: column; gap: .625rem; }
+            .btn-primary, .btn-secondary { width: 100%; justify-content: center; padding: .75rem 1rem; }
+
+            /* Stats */
+            .stats-strip { grid-template-columns: 1fr; }
+            .stat-cell { padding: 1.5rem 1rem; }
+            .stat-cell:first-child { border-radius: 10px 10px 0 0; }
+            .stat-cell:last-child  { border-radius: 0 0 10px 10px; }
+            .stat-num { font-size: 1.75rem; }
+
+            /* Section spacing */
+            .section { padding: 3rem 1rem; }
+            .section-title { font-size: 1.5rem; }
+
+            /* Features */
+            .features-header { margin-bottom: 2rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .feature-card { padding: 1.5rem 1.25rem; }
+
+            /* Users section */
+            .users-inner { padding: 3rem 1rem; }
+            .users-title { font-size: 1.5rem; margin-bottom: 2rem; }
+            .users-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .user-card { padding: 1.5rem 1.25rem; }
+
+            /* Steps */
+            .steps-grid { grid-template-columns: 1fr; margin-top: 2rem; }
+            .step-card { padding: 1.5rem 1.25rem; }
+
+            /* CTA */
+            .cta-section { padding: 2rem 1rem 4rem; }
+            .cta-card { padding: 2rem 1.25rem; grid-template-columns: 1fr; gap: 1.5rem; }
+            .cta-title { font-size: 1.375rem; }
+            .cta-actions { flex-direction: column; gap: .625rem; }
+            .cta-actions .btn-primary,
+            .cta-actions .btn-secondary { width: 100%; justify-content: center; }
+
+            /* Footer */
+            .footer-inner { flex-direction: column; gap: .75rem; text-align: center; padding: 1.5rem 1rem; }
+        }
+
+        /* ── sm: regular phones (400px – 599px) ───────── */
+        @media (min-width: 400px) and (max-width: 599px) {
+            /* Nav */
+            .nav-inner { padding: 0 1.25rem; }
+            .nav-link  { display: none; }
+            .nav-cta { padding: 6px 12px; }
+
+            /* Hero */
+            .hero { padding: 3rem 1.25rem 2.5rem; gap: 2.5rem; grid-template-columns: 1fr; }
+            .hero-visual { order: -1; }
+            .hero-title { font-size: 2rem; }
+            .hero-body { font-size: .9rem; margin-bottom: 2rem; }
+            .hero-actions { flex-direction: column; gap: .625rem; }
+            .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+
+            /* Stats */
+            .stats-strip { grid-template-columns: 1fr; }
+            .stat-cell { padding: 1.75rem 1.25rem; }
+            .stat-cell:first-child { border-radius: 10px 10px 0 0; }
+            .stat-cell:last-child  { border-radius: 0 0 10px 10px; }
+            .stat-num { font-size: 2rem; }
+
+            /* Section spacing */
+            .section { padding: 3.5rem 1.25rem; }
+            .section-title { font-size: 1.625rem; }
+
+            /* Features */
+            .features-grid { grid-template-columns: 1fr; }
+            .feature-card { padding: 1.75rem 1.5rem; }
+
+            /* Users section */
+            .users-inner { padding: 3.5rem 1.25rem; }
+            .users-title { font-size: 1.625rem; margin-bottom: 2rem; }
+            .users-grid { grid-template-columns: 1fr; gap: 1rem; }
+            .user-card { padding: 1.75rem 1.5rem; }
+
+            /* Steps */
+            .steps-grid { grid-template-columns: 1fr; margin-top: 2rem; }
+            .step-card { padding: 1.75rem 1.5rem; }
+
+            /* CTA */
+            .cta-section { padding: 2.5rem 1.25rem 4.5rem; }
+            .cta-card { padding: 2.5rem 1.5rem; grid-template-columns: 1fr; gap: 1.75rem; }
+            .cta-title { font-size: 1.5rem; }
+            .cta-actions { flex-direction: column; gap: .625rem; }
+            .cta-actions .btn-primary,
+            .cta-actions .btn-secondary { width: 100%; justify-content: center; }
+
+            /* Footer */
+            .footer-inner { flex-direction: column; gap: .75rem; text-align: center; padding: 1.75rem 1.25rem; }
+        }
+
+        /* ── md: large phones & small tablets (600px – 767px) */
+        @media (min-width: 600px) and (max-width: 767px) {
+            /* Nav */
+            .nav-inner { padding: 0 1.5rem; }
+            .nav-link  { display: none; }
+
+            /* Hero */
+            .hero { padding: 3.5rem 1.5rem 3rem; gap: 2.5rem; grid-template-columns: 1fr; }
+            .hero-visual { order: -1; }
+            .hero-title { font-size: 2.25rem; }
+            .hero-body { max-width: 100%; }
+            .hero-actions { gap: .75rem; }
+
+            /* Stats */
+            .stats-strip { grid-template-columns: 1fr; }
+            .stat-cell:first-child { border-radius: 10px 10px 0 0; }
+            .stat-cell:last-child  { border-radius: 0 0 10px 10px; }
+
+            /* Section spacing */
+            .section { padding: 4rem 1.5rem; }
+
+            /* Features */
+            .features-grid { grid-template-columns: 1fr 1fr; }
+
+            /* Users */
+            .users-inner { padding: 4rem 1.5rem; }
+            .users-grid { grid-template-columns: 1fr; gap: 1.25rem; }
+
+            /* Steps */
+            .steps-grid { grid-template-columns: 1fr 1fr; margin-top: 2.5rem; }
+
+            /* CTA */
+            .cta-section { padding: 3rem 1.5rem 5rem; }
+            .cta-card { grid-template-columns: 1fr; gap: 2rem; padding: 2.5rem 2rem; }
+            .cta-actions { flex-direction: row; gap: .75rem; }
+
+            /* Footer */
+            .footer-inner { padding: 1.75rem 1.5rem; }
+        }
+
+        /* ── lg: tablets & small laptops (768px – 1023px) */
+        @media (min-width: 768px) and (max-width: 1023px) {
+            /* Nav */
+            .nav-inner { padding: 0 1.75rem; }
+
+            /* Hero */
+            .hero { padding: 5rem 1.75rem 4rem; gap: 3rem; grid-template-columns: 1fr 1fr; }
+            .hero-title { font-size: 2.5rem; }
+            .hero-body { font-size: .9375rem; }
+
+            /* Stats */
+            .stats-strip { grid-template-columns: repeat(3, 1fr); }
+            .stat-cell:first-child { border-radius: 10px 0 0 10px; }
+            .stat-cell:last-child  { border-radius: 0 10px 10px 0; }
+            .stat-num { font-size: 2rem; }
+
+            /* Section */
+            .section { padding: 4.5rem 1.75rem; }
+            .section-title { font-size: 2rem; }
+
+            /* Features: 2 cols on tablet */
+            .features-grid { grid-template-columns: 1fr 1fr; }
+            .feature-card { padding: 1.75rem 1.5rem; }
+
+            /* Users */
+            .users-inner { padding: 4.5rem 1.75rem; }
+            .users-title { font-size: 2rem; }
+            .users-grid { grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+            .user-card { padding: 1.75rem; }
+
+            /* Steps: 2×2 on tablet */
+            .steps-grid { grid-template-columns: 1fr 1fr; margin-top: 2.5rem; }
+            .step-card { padding: 1.75rem 1.5rem; }
+
+            /* CTA */
+            .cta-section { padding: 2.5rem 1.75rem 5rem; }
+            .cta-card { grid-template-columns: 1fr; gap: 2rem; padding: 3rem 2.5rem; }
+            .cta-actions { flex-direction: row; align-items: center; }
+
+            /* Footer */
+            .footer-inner { padding: 2rem 1.75rem; }
+        }
+
+        /* ── xl: laptops (1024px – 1279px) ────────────── */
+        @media (min-width: 1024px) and (max-width: 1279px) {
+            /* Nav */
+            .nav-inner { max-width: 1024px; padding: 0 2rem; }
+
+            /* Hero */
+            .hero { max-width: 1024px; padding: 6rem 2rem 4.5rem; gap: 3.5rem; }
+
+            /* Stats */
+            .stats-strip { max-width: 1024px; }
+            .stat-num { font-size: 2.1rem; }
+
+            /* Section */
+            .section { max-width: 1024px; padding: 5rem 2rem; }
+            .features-grid { grid-template-columns: repeat(3, 1fr); }
+            .steps-grid { grid-template-columns: repeat(4, 1fr); }
+            .users-grid { grid-template-columns: 1fr 1fr; }
+
+            /* Users inner */
+            .users-inner { max-width: 1024px; padding: 5rem 2rem; }
+
+            /* CTA */
+            .cta-section { max-width: 1024px; }
+            .cta-card { grid-template-columns: 1fr auto; padding: 3.5rem 2.5rem; }
+            .cta-actions { flex-direction: column; align-items: flex-end; }
+
+            /* Footer */
+            .footer-inner { max-width: 1024px; }
+        }
+
+        /* ── 2xl: large desktops (≥ 1280px) ───────────── */
+        @media (min-width: 1280px) {
+            /* Widen the content container on large screens */
+            .nav-inner,
+            .hero,
+            .section,
+            .users-inner,
+            .cta-section,
+            .footer-inner { max-width: 1200px; }
+
+            /* Slightly more padding breathing room */
+            .hero { padding: 8rem 2.5rem 6rem; gap: 5rem; }
+            .section { padding: 6rem 2.5rem; }
+            .users-inner { padding: 6rem 2.5rem; }
+            .cta-section { padding: 3.5rem 2.5rem 7rem; }
+
+            /* Stat numbers bigger on large screens */
+            .stat-num { font-size: 2.5rem; }
+            .stat-cell { padding: 2.5rem 2rem; }
+
+            /* Feature & step cards breathe more */
+            .feature-card { padding: 2.25rem 2rem; }
+            .step-card { padding: 2.25rem 2rem; }
+
+            /* Hero title gets the full large treatment */
+            .hero-title { font-size: 4rem; }
+            .hero-body { font-size: 1.0625rem; max-width: 460px; }
+
+            /* Section titles */
+            .section-title { font-size: 2.75rem; }
+            .users-title { font-size: 2.75rem; }
+
+            /* CTA card more spacious */
+            .cta-card { padding: 4.5rem 4rem; }
+
+            /* Footer */
+            .footer-inner { padding: 2.25rem 2.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ─── NAV ─────────────────────────────────────────── -->
+<nav>
+    <div class="nav-inner">
+        <a href="#" class="nav-brand">
+            <div class="brand-mark">🎓</div>
+            <span class="brand-name">Faculty Events</span>
+        </a>
+        <div class="nav-actions">
+            <a href="#features" class="nav-link">Features</a>
+            <a href="#how-it-works" class="nav-link">How it works</a>
+            <a href="admin/login.php" class="nav-link">Admin</a>
+            <a href="events_list.php" class="nav-cta">Browse Events →</a>
+        </div>
+    </div>
+</nav>
+
+<!-- ─── HERO ─────────────────────────────────────────── -->
+<section>
+    <div class="hero">
+        <div class="hero-left">
+            <div class="hero-eyebrow">
+                <span></span>
+                Faculty Event & Seminar Registration
+            </div>
+            <h1 class="hero-title">
+                Faculty events,<br>
+                <em>beautifully</em><br>
+                managed.
+            </h1>
+            <p class="hero-body">
+                A complete digital registration system built for university departments. Students sign up online, admins manage everything from one panel, and paper lists become a thing of the past.
+            </p>
+            <div class="hero-actions">
+                <a href="events_list.php" class="btn-primary">Browse Events →</a>
+                <a href="admin/login.php" class="btn-secondary">Admin Login</a>
+            </div>
+        </div>
+
+        <div class="hero-visual">
+            <div class="mockup-shell">
+                <div class="mockup-bar">
+                    <div class="dot dot-r"></div>
+                    <div class="dot dot-y"></div>
+                    <div class="dot dot-g"></div>
+                </div>
+                <div class="mockup-body">
+
+                    <div class="mock-event">
+                        <div class="mock-event-head">
+                            <div class="mock-event-title">Annual Faculty Seminar 2025</div>
+                            <div class="mock-event-venue">📍 Main Auditorium</div>
+                        </div>
+                        <div class="mock-event-body">
+                            <div class="mock-meta">
+                                <span class="mock-date">📅 30 Jun 2025</span>
+                                <span class="mock-badge badge-open">Open</span>
+                            </div>
+                            <div class="mock-bar-wrap"><div class="mock-bar-fill" style="width: 62%"></div></div>
+                            <div class="mock-seats">124 / 200 registered (76 spots left)</div>
+                            <div class="mock-btn">Register Now →</div>
+                        </div>
+                    </div>
+
+                    <div class="mock-event">
+                        <div class="mock-event-head">
+                            <div class="mock-event-title">Python Workshop for Beginners</div>
+                            <div class="mock-event-venue">📍 ICT Lab 2, Engineering Block</div>
+                        </div>
+                        <div class="mock-event-body">
+                            <div class="mock-meta">
+                                <span class="mock-date">📅 14 Jun 2025</span>
+                                <span class="mock-badge badge-warn">3 left</span>
+                            </div>
+                            <div class="mock-bar-wrap"><div class="mock-bar-fill amber" style="width: 93%"></div></div>
+                            <div class="mock-seats">37 / 40 registered (3 spots left)</div>
+                            <div class="mock-btn">Register Now →</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<hr class="divider-line">
+
+<!-- ─── STATS ────────────────────────────────────────── -->
+<div style="max-width:1100px; margin:0 auto; padding:3rem 2rem;">
+    <div class="stats-strip reveal" style="padding:0; margin:0;">
+        <div class="stat-cell">
+            <div class="stat-num">100%</div>
+            <div class="stat-label">Paperless registration process</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-num">0</div>
+            <div class="stat-label">Over-bookings, ever</div>
+        </div>
+        <div class="stat-cell">
+            <div class="stat-num">EVT‑XXXX</div>
+            <div class="stat-label">Unique confirmation code per student</div>
+        </div>
+    </div>
+</div>
+
+<hr class="divider-line">
+
+<!-- ─── FEATURES ─────────────────────────────────────── -->
+<section class="section" id="features">
+    <div class="features-header reveal">
+        <p class="section-eyebrow">What it does</p>
+        <h2 class="section-title">Everything a faculty event<br>platform needs.</h2>
+        <p class="section-sub">Six core capabilities work together to take your events from a shared spreadsheet to a polished, self-managing system.</p>
+    </div>
+
+    <div class="features-grid reveal">
+
+        <div class="feature-card">
+            <div class="feature-icon">📅</div>
+            <div class="feature-title">Event Management</div>
+            <p class="feature-body">Create, edit, and delete seminars, workshops, and departmental events from a clean admin panel. Set titles, dates, venues, and maximum capacity in seconds.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">✍️</div>
+            <div class="feature-title">Student Registration</div>
+            <p class="feature-body">Students register online with their name, matric number, and email. No accounts, no passwords — just a simple form that works on any device.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <div class="feature-title">Capacity Enforcement</div>
+            <p class="feature-body">The system automatically counts registrations before each sign-up. Once an event is full, new registrations are blocked and the button is disabled for everyone.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">🎟️</div>
+            <div class="feature-title">Unique Confirmation Codes</div>
+            <p class="feature-body">Every student receives a cryptographically generated code (e.g. EVT-A3F9B2) the moment they register. They present it at the door for instant verification.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">👥</div>
+            <div class="feature-title">Participant Lists</div>
+            <p class="feature-body">Admins can pull up a full attendee list for any event — with name, matric number, email, registration code, and timestamp. Print it or save as PDF in one click.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">⏱️</div>
+            <div class="feature-title">Live Countdown Timers</div>
+            <p class="feature-body">Each event card displays a colour-coded countdown showing exactly how many days remain. Students see urgency at a glance and are more likely to register early.</p>
+        </div>
+
+    </div>
+</section>
+
+<hr class="divider-line">
+
+<!-- ─── WHO IT'S FOR ──────────────────────────────────── -->
+<section class="users-section">
+    <div class="users-inner">
+        <p class="users-eyebrow">Who it's for</p>
+        <h2 class="users-title">Built for two kinds of people.</h2>
+
+        <div class="users-grid">
+
+            <div class="user-card reveal">
+                <p class="user-role">User type 01</p>
+                <h3 class="user-heading">Faculty Admin & Staff</h3>
+                <p class="user-body">Anyone responsible for organising departmental events — from seminar coordinators to department secretaries. You get a dedicated admin panel to run everything.</p>
+                <ul class="user-perks">
+                    <li>Secure login with session-based authentication</li>
+                    <li>Create and manage unlimited events</li>
+                    <li>View real-time registration counts per event</li>
+                    <li>Export participant lists as printable PDFs</li>
+                    <li>Edit or cancel events at any time</li>
+                </ul>
+            </div>
+
+            <div class="user-card reveal">
+                <p class="user-role">User type 02</p>
+                <h3 class="user-heading">Students</h3>
+                <p class="user-body">Any student looking to attend a faculty event. No account creation required — just find the event, fill in your details, and you're registered in under a minute.</p>
+                <ul class="user-perks">
+                    <li>Browse all upcoming events in one place</li>
+                    <li>See real-time availability and countdowns</li>
+                    <li>Register with just a name, matric number, and email</li>
+                    <li>Instant unique confirmation code on success</li>
+                    <li>Duplicate registration prevention per matric number</li>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+<!-- ─── HOW IT WORKS ──────────────────────────────────── -->
+<section class="section" id="how-it-works">
+    <div class="reveal">
+        <p class="section-eyebrow">How it works</p>
+        <h2 class="section-title">From event creation to<br>door check-in — four steps.</h2>
+    </div>
+
+    <div class="steps-grid reveal">
+
+        <div class="step-card">
+            <div class="step-num">01</div>
+            <div class="step-title">Admin creates an event</div>
+            <p class="step-body">The admin logs in and creates a new event — title, description, date, venue, and maximum capacity. It goes live immediately on the public listing.</p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-num">02</div>
+            <div class="step-title">Students browse and register</div>
+            <p class="step-body">Students visit the events page, see what's upcoming with live countdowns and spot counts, then fill in a short form to secure their place.</p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-num">03</div>
+            <div class="step-title">Code is issued instantly</div>
+            <p class="step-body">On successful registration, the student sees a confirmation page with their unique EVT-XXXXXX code. They screenshot it or write it down before attending.</p>
+        </div>
+
+        <div class="step-card">
+            <div class="step-num">04</div>
+            <div class="step-title">Admin verifies at the door</div>
+            <p class="step-body">The admin pulls up the participant list for the event, matches codes at the entrance, and has a clean digital attendance record ready to print or file.</p>
+        </div>
+
+    </div>
+</section>
+
+<hr class="divider-line">
+
+<!-- ─── CTA ───────────────────────────────────────────── -->
+<section class="cta-section">
+    <div class="cta-card reveal">
+        <div>
+            <h2 class="cta-title">Ready to run your next event?</h2>
+            <p class="cta-sub">Browse upcoming faculty events as a student, or log into the admin panel to create and manage your own. No setup needed — the system is already running.</p>
+        </div>
+        <div class="cta-actions">
+            <a href="events_list.php" class="btn-primary">Browse Events →</a>
+            <a href="admin/login.php" class="btn-secondary">Admin Login</a>
+        </div>
+    </div>
+</section>
+
+<!-- ─── FOOTER ────────────────────────────────────────── -->
+<footer>
+    <div class="footer-inner">
+        <a href="#" class="footer-brand nav-brand">
+            <div class="brand-mark">🎓</div>
+            <span class="brand-name">Faculty Events</span>
+        </a>
+        <p class="footer-copy">Faculty Event & Seminar Registration System &copy; <?php echo date('Y'); ?></p>
+    </div>
+</footer>
+
+<script>
+    // Scroll-triggered reveal
+    const reveals = document.querySelectorAll('.reveal');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry, i) => {
+            if (entry.isIntersecting) {
+                // small stagger if multiple fire together
+                setTimeout(() => entry.target.classList.add('in'), i * 60);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.12 });
+
+    reveals.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
