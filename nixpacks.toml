@@ -1,7 +1,0 @@
-[phases.setup]
-aptPkgs = ["libpng-dev", "libjpeg-dev", "libzip-dev"]
-
-[phases.build]
-cmds = [
-    "docker-php-ext-install pdo pdo_mysql mysqli"
-]
