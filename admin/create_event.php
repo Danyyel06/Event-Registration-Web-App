@@ -139,7 +139,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 <nav>
     <div class="nav-inner">
         <a href="dashboard.php" class="nav-brand">
-            <div class="brand-mark">🎓</div>
+            <div><img src="../images/lasu-logo.png" alt="" width = 30 height = 30></div>
             <span class="brand-name">Faculty Events</span>
             <span class="brand-tag">Admin</span>
         </a>

@@ -380,7 +380,7 @@ $events = $pdo->query('
 <header>
     <div class="header-inner">
         <a href="events_list.php" class="logo">
-            <div class="logo-mark">🎓</div>
+            <div><img src="images/lasu-logo.png" alt="" width = 30 height = 30></div>
             <span class="logo-name">Faculty Events</span>
         </a>
         <a href="register.php" class="header-cta">Register for an event →</a>

@@ -221,8 +221,8 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
 
 <div class="wrapper">
     <div class="eyebrow">
-        <div class="logo-mark">🎓</div>
-        <h1>Faculty Events</h1>
+        <div><img src="../images/lasu-logo.png" alt="" width = 50 height = 50></div>
+        <h1>Faculty Events and Seminar Registration</h1>
         <p>Administrator portal</p>
     </div>
 
@@ -257,7 +257,7 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
         </div>
     </div>
 
-    <p class="footer-note">Faculty Events &copy; <?= date('Y') ?></p>
+    <p class="footer-note">Faculty Events and Seminar Registration &copy; <?= date('Y') ?></p>
 </div>
 
 </body>
