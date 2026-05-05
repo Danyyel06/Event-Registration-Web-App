@@ -1,5 +1,5 @@
 <?php
 
-header('Location: events_list.php');
+header('Location: index.html');
 
 exit;

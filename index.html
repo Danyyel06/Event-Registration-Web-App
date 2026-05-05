@@ -62,14 +62,21 @@
         }
 
         .brand-mark {
-            width: 28px;
-            height: 28px;
-            background: var(--black);
-            border-radius: 6px;
+            width: 38px;
+            height: 38px;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 14px;
+            overflow: hidden;
+            flex-shrink: 0;
+            background: transparent;
+        }
+
+        .brand-mark img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .brand-name { font-size: .875rem; font-weight: 700; color: var(--ink); }
@@ -212,78 +219,79 @@
 
         .btn-secondary:hover { background: var(--hover); }
 
-        /* ── HERO VISUAL ───────────────────────────────── */
+        /* ── HERO VISUAL — CAROUSEL ────────────────────── */
         .hero-visual {
             animation: fadeUp .5s .3s ease both;
         }
 
-        .mockup-shell {
-            background: var(--surface);
-            border: 1px solid var(--border);
+        .carousel {
+            position: relative;
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 8px 40px rgba(0,0,0,.07), 0 1px 3px rgba(0,0,0,.05);
-        }
-
-        .mockup-bar {
-            background: #fafafa;
-            border-bottom: 1px solid var(--border-light);
-            padding: .75rem 1rem;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .dot { width: 9px; height: 9px; border-radius: 50%; }
-        .dot-r { background: #ffb3b3; }
-        .dot-y { background: #ffe0a0; }
-        .dot-g { background: #b3e6b3; }
-
-        .mockup-body { padding: 1.25rem; }
-
-        .mock-event {
             border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: .75rem;
-        }
-
-        .mock-event:last-child { margin-bottom: 0; }
-
-        .mock-event-head {
+            box-shadow: 0 8px 40px rgba(0,0,0,.10), 0 1px 3px rgba(0,0,0,.06);
+            aspect-ratio: 4 / 3;
             background: var(--black);
-            padding: .75rem 1rem;
         }
 
-        .mock-event-title { font-size: .8rem; font-weight: 700; color: white; margin-bottom: 2px; }
-        .mock-event-venue { font-size: .65rem; color: rgba(255,255,255,.55); }
+        .carousel-slide {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            transition: opacity .9s ease;
+        }
 
-        .mock-event-body { padding: .875rem 1rem; }
+        .carousel-slide.active { opacity: 1; }
 
-        .mock-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: .75rem; }
-        .mock-date { font-size: .7rem; color: var(--ink-muted); }
-        .mock-badge { font-size: .6rem; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; padding: 2px 8px; border-radius: 999px; }
-        .badge-open { background: #f0fdf4; color: #166534; border: 1px solid #bbf7d0; }
-        .badge-warn { background: #fffbeb; color: #92400e; border: 1px solid #fde68a; }
-
-        .mock-bar-wrap { height: 4px; background: var(--border-light); border-radius: 999px; overflow: hidden; margin-bottom: .5rem; }
-        .mock-bar-fill { height: 100%; background: var(--black); border-radius: 999px; }
-        .mock-bar-fill.amber { background: #f59e0b; }
-
-        .mock-seats { font-size: .65rem; color: var(--ink-faint); margin-bottom: .75rem; }
-
-        .mock-btn {
+        .carousel-slide img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             display: block;
-            text-align: center;
-            background: var(--black);
-            color: white;
-            font-size: .72rem;
-            font-weight: 700;
-            padding: .5rem;
-            border-radius: 5px;
         }
 
-        .mock-btn.disabled { background: var(--border); color: var(--ink-faint); }
+        /* Caption overlay at bottom */
+        .carousel-caption {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 1.25rem 1.25rem 1rem;
+            background: linear-gradient(to top, rgba(10,10,10,.75) 0%, transparent 100%);
+        }
+
+        .carousel-caption p {
+            font-size: .75rem;
+            font-weight: 600;
+            color: rgba(255,255,255,.9);
+            letter-spacing: .02em;
+        }
+
+        /* Dot indicators */
+        .carousel-dots {
+            position: absolute;
+            bottom: .875rem;
+            right: 1rem;
+            display: flex;
+            gap: 5px;
+            z-index: 2;
+        }
+
+        .c-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: rgba(255,255,255,.35);
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            transition: background .25s, transform .25s;
+        }
+
+        .c-dot.active {
+            background: rgba(255,255,255,.95);
+            transform: scale(1.3);
+        }
 
         /* ── DIVIDER ───────────────────────────────────── */
         .divider-line {
@@ -883,7 +891,7 @@
 <nav>
     <div class="nav-inner">
         <a href="#" class="nav-brand">
-            <div class="brand-mark">🎓</div>
+            <div class="brand-mark"><img src="images/lasu-logo.png" alt="LASU Logo"></div>
             <span class="brand-name">Faculty Events</span>
         </a>
         <div class="nav-actions">
@@ -918,46 +926,27 @@
         </div>
 
         <div class="hero-visual">
-            <div class="mockup-shell">
-                <div class="mockup-bar">
-                    <div class="dot dot-r"></div>
-                    <div class="dot dot-y"></div>
-                    <div class="dot dot-g"></div>
+            <div class="carousel" id="heroCarousel">
+
+                <div class="carousel-slide active">
+                    <img src="images/Symposium.jpg" alt="Faculty Symposium — students in the lecture hall">
+                    <div class="carousel-caption"><p>Annual Faculty Symposium</p></div>
                 </div>
-                <div class="mockup-body">
 
-                    <div class="mock-event">
-                        <div class="mock-event-head">
-                            <div class="mock-event-title">Annual Faculty Seminar 2025</div>
-                            <div class="mock-event-venue">📍 Main Auditorium</div>
-                        </div>
-                        <div class="mock-event-body">
-                            <div class="mock-meta">
-                                <span class="mock-date">📅 30 Jun 2025</span>
-                                <span class="mock-badge badge-open">Open</span>
-                            </div>
-                            <div class="mock-bar-wrap"><div class="mock-bar-fill" style="width: 62%"></div></div>
-                            <div class="mock-seats">124 / 200 registered (76 spots left)</div>
-                            <div class="mock-btn">Register Now →</div>
-                        </div>
-                    </div>
+                <div class="carousel-slide">
+                    <img src="images/Techstartup.jpg" alt="Tech Startup Workshop — students collaborating on laptops">
+                    <div class="carousel-caption"><p>Tech Startup & Innovation Workshop</p></div>
+                </div>
 
-                    <div class="mock-event">
-                        <div class="mock-event-head">
-                            <div class="mock-event-title">Python Workshop for Beginners</div>
-                            <div class="mock-event-venue">📍 ICT Lab 2, Engineering Block</div>
-                        </div>
-                        <div class="mock-event-body">
-                            <div class="mock-meta">
-                                <span class="mock-date">📅 14 Jun 2025</span>
-                                <span class="mock-badge badge-warn">3 left</span>
-                            </div>
-                            <div class="mock-bar-wrap"><div class="mock-bar-fill amber" style="width: 93%"></div></div>
-                            <div class="mock-seats">37 / 40 registered (3 spots left)</div>
-                            <div class="mock-btn">Register Now →</div>
-                        </div>
-                    </div>
+                <div class="carousel-slide">
+                    <img src="images/Inauguration.jpg" alt="Inauguration ceremony — faculty and students on stage">
+                    <div class="carousel-caption"><p>Faculty Inauguration Ceremony</p></div>
+                </div>
 
+                <div class="carousel-dots">
+                    <button class="c-dot active" data-idx="0" aria-label="Slide 1"></button>
+                    <button class="c-dot" data-idx="1" aria-label="Slide 2"></button>
+                    <button class="c-dot" data-idx="2" aria-label="Slide 3"></button>
                 </div>
             </div>
         </div>
@@ -1131,7 +1120,7 @@
 <footer>
     <div class="footer-inner">
         <a href="#" class="footer-brand nav-brand">
-            <div class="brand-mark">🎓</div>
+            <div class="brand-mark"><img src="lasu-logo.png" alt="LASU Logo"></div>
             <span class="brand-name">Faculty Events</span>
         </a>
         <p class="footer-copy">Faculty Event & Seminar Registration System &copy; <?php echo date('Y'); ?></p>
@@ -1139,19 +1128,55 @@
 </footer>
 
 <script>
-    // Scroll-triggered reveal
+    // ── Scroll-triggered reveal ──────────────────────────
     const reveals = document.querySelectorAll('.reveal');
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry, i) => {
             if (entry.isIntersecting) {
-                // small stagger if multiple fire together
                 setTimeout(() => entry.target.classList.add('in'), i * 60);
                 observer.unobserve(entry.target);
             }
         });
     }, { threshold: 0.12 });
-
     reveals.forEach(el => observer.observe(el));
+
+    // ── Hero Image Carousel ───────────────────────────────
+    (function () {
+        const slides = document.querySelectorAll('#heroCarousel .carousel-slide');
+        const dots   = document.querySelectorAll('#heroCarousel .c-dot');
+        let current  = 0;
+        let timer;
+
+        function goTo(idx) {
+            slides[current].classList.remove('active');
+            dots[current].classList.remove('active');
+            current = (idx + slides.length) % slides.length;
+            slides[current].classList.add('active');
+            dots[current].classList.add('active');
+        }
+
+        function next() { goTo(current + 1); }
+
+        function startTimer() {
+            timer = setInterval(next, 3000);
+        }
+
+        // Dot click — reset timer so it doesn't immediately skip
+        dots.forEach(dot => {
+            dot.addEventListener('click', () => {
+                clearInterval(timer);
+                goTo(parseInt(dot.dataset.idx));
+                startTimer();
+            });
+        });
+
+        // Pause on hover
+        const carousel = document.getElementById('heroCarousel');
+        carousel.addEventListener('mouseenter', () => clearInterval(timer));
+        carousel.addEventListener('mouseleave', startTimer);
+
+        startTimer();
+    })();
 </script>
 
 </body>
