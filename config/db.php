@@ -2,8 +2,8 @@
 // 1. Keep the Lagos timezone for your LASU presentation
 date_default_timezone_set('Africa/Lagos');
 
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'event_reg_db');
+define('DB_HOST', '127.0.0.1:3307');
+define('DB_NAME', 'event_registration_db');
 define('DB_USER', 'root');
 define('DB_PASS', '');
 

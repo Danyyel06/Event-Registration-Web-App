@@ -19,9 +19,9 @@ if($_SERVER['REQUEST_METHOD'] === 'POST'){
     }else{
         $stmt = $pdo->prepare('SELECT id, username, password FROM admins WHERE username = :username LIMIT 1');
         $stmt->execute([':username' => $username]);
-        $admin = $stmt->fetch();
+        $admin = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if ($admin && password_verify($password, $admin['password'])) {
+        if ($admin && password_verify($password, $admin['password'] ?? $admin['PASSWORD'])) {
             session_regenerate_id(true);
             $_SESSION['admin_id'] = $admin['id'];
             $_SESSION['admin_name'] = $admin['username'];

@@ -1,0 +1,1933 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline' 'unsafe-eval';">
+<title>LIMDP — LASU Internship Management Platform</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+/* ── RESET & TOKENS ─────────────────────────────────────── */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0D1F35;
+  --navy2:#1a3352;
+  --blue:#1D4ED8;
+  --purple:#6D28D9;
+  --green:#047857;
+  --amber:#B45309;
+  --teal:#0E7490;
+  --slate:#475569;
+  --muted:#94A3B8;
+  --border:#E2E8F0;
+  --bg:#F8FAFC;
+  --white:#FFFFFF;
+  --text:#0F172A;
+  --card:#FFFFFF;
+  --heading:'Bricolage Grotesque',sans-serif;
+  --body:'DM Sans',sans-serif;
+  --ease:cubic-bezier(.25,.46,.45,.94);
+}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  font-family:var(--body);
+  background:var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+  min-height:100dvh;
+}
+
+/* ── UTILITY ─────────────────────────────────────────────── */
+.sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0)}
+
+/* ════════════════════════════════════════════════════════════
+   NAV
+════════════════════════════════════════════════════════════ */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 20px;
+  background:rgba(248,250,252,.92);
+  backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border);
+}
+.nav-brand{
+  display:flex;align-items:center;gap:9px;
+  text-decoration:none;color:var(--text);
+}
+.nav-mark{
+  width:34px;height:34px;border-radius:9px;
+  background:var(--navy);
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-family:var(--heading);font-weight:700;font-size:12px;
+  letter-spacing:-.3px;flex-shrink:0;
+}
+.nav-name{font-family:var(--heading);font-weight:600;font-size:14px;color:var(--text)}
+.nav-right{display:flex;align-items:center;gap:8px}
+.nav-signin{
+  background:none;border:1.5px solid var(--border);
+  border-radius:8px;padding:7px 16px;
+  font-size:13px;font-weight:500;
+  font-family:var(--body);color:var(--text);
+  cursor:pointer;transition:border-color .2s,background .2s;
+}
+.nav-signin:hover{border-color:#94A3B8;background:white}
+.nav-start{
+  background:var(--navy);color:white;border:none;
+  border-radius:8px;padding:8px 18px;
+  font-size:13px;font-weight:600;
+  font-family:var(--body);cursor:pointer;
+  transition:background .2s,transform .1s;
+}
+.nav-start:hover{background:var(--navy2);transform:translateY(-1px)}
+
+/* ════════════════════════════════════════════════════════════
+   HERO
+════════════════════════════════════════════════════════════ */
+.hero{
+  min-height:100dvh;
+  padding:80px 20px 48px;
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  text-align:center;
+  background:var(--white);
+  position:relative;overflow:hidden;
+}
+/* subtle grid background */
+.hero::before{
+  content:'';
+  position:absolute;inset:0;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:40px 40px;
+  opacity:.35;
+  pointer-events:none;
+}
+/* fade grid at edges */
+.hero::after{
+  content:'';
+  position:absolute;inset:0;
+  background:radial-gradient(ellipse 80% 60% at 50% 50%, transparent 30%, white 100%);
+  pointer-events:none;
+}
+.hero-inner{position:relative;z-index:1;max-width:600px;width:100%}
+
+.hero-pill{
+  display:inline-flex;align-items:center;gap:7px;
+  background:#EFF6FF;border:1px solid #BFDBFE;
+  border-radius:20px;padding:5px 13px;
+  font-size:12px;font-weight:500;color:var(--blue);
+  margin-bottom:28px;
+}
+.live-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:#22C55E;
+  box-shadow:0 0 0 0 rgba(34,197,94,.6);
+  animation:livepulse 2s ease-in-out infinite;
+}
+@keyframes livepulse{
+  0%{box-shadow:0 0 0 0 rgba(34,197,94,.5)}
+  70%{box-shadow:0 0 0 7px rgba(34,197,94,0)}
+  100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}
+}
+
+.hero-h1{
+  font-family:var(--heading);
+  font-size:clamp(38px,10vw,60px);
+  font-weight:800;
+  line-height:1.05;
+  letter-spacing:-1.5px;
+  color:var(--text);
+  margin-bottom:20px;
+}
+.hero-h1 span{
+  color:transparent;
+  -webkit-text-stroke:2px var(--navy);
+  font-style:italic;
+}
+.hero-sub{
+  font-size:16px;color:var(--slate);
+  line-height:1.7;max-width:440px;
+  margin:0 auto 36px;
+  font-weight:400;
+}
+
+/* HERO ACTIONS */
+.hero-actions{display:flex;flex-direction:column;align-items:center;gap:12px;width:100%}
+.btn-primary-hero{
+  width:100%;max-width:320px;
+  padding:16px 24px;
+  background:var(--navy);color:white;
+  border:none;border-radius:14px;
+  font-size:16px;font-weight:700;
+  font-family:var(--heading);
+  cursor:pointer;
+  transition:background .2s,transform .15s,box-shadow .2s;
+  display:flex;align-items:center;justify-content:center;gap:10px;
+  box-shadow:0 4px 20px rgba(13,31,53,.25);
+}
+.btn-primary-hero:hover{
+  background:var(--navy2);
+  transform:translateY(-2px);
+  box-shadow:0 8px 32px rgba(13,31,53,.3);
+}
+.btn-primary-hero:active{transform:translateY(0)}
+.btn-primary-arrow{
+  width:24px;height:24px;border-radius:50%;
+  background:rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-size:14px;flex-shrink:0;
+  transition:transform .2s;
+}
+.btn-primary-hero:hover .btn-primary-arrow{transform:translateX(3px)}
+
+.btn-ghost-hero{
+  background:none;border:none;cursor:pointer;
+  font-size:13px;color:var(--muted);font-family:var(--body);
+  text-decoration:underline;text-decoration-color:transparent;
+  transition:color .2s,text-decoration-color .2s;
+}
+.btn-ghost-hero:hover{color:var(--slate);text-decoration-color:var(--muted)}
+
+/* hero stat strip */
+.hero-stats{
+  display:flex;align-items:center;justify-content:center;
+  gap:0;margin-top:48px;
+  border:1px solid var(--border);border-radius:14px;
+  overflow:hidden;background:white;
+  max-width:400px;width:100%;
+}
+.hstat{
+  flex:1;padding:14px 10px;text-align:center;
+  border-right:1px solid var(--border);
+}
+.hstat:last-child{border-right:none}
+.hstat-num{
+  font-family:var(--heading);font-size:22px;
+  font-weight:800;color:var(--text);line-height:1;
+}
+.hstat-label{font-size:10px;color:var(--muted);margin-top:3px;line-height:1.3}
+
+/* ════════════════════════════════════════════════════════════
+   PROBLEM SECTION
+════════════════════════════════════════════════════════════ */
+.section{padding:80px 20px}
+.section-inner{max-width:680px;margin:0 auto}
+.eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--blue);margin-bottom:10px;
+}
+.section-h2{
+  font-family:var(--heading);
+  font-size:clamp(28px,7vw,44px);
+  font-weight:800;line-height:1.08;
+  letter-spacing:-1px;color:var(--text);
+  margin-bottom:16px;
+}
+.section-body{
+  font-size:15px;color:var(--slate);
+  line-height:1.7;margin-bottom:36px;
+}
+
+.problem-cards{display:flex;flex-direction:column;gap:12px}
+.prob-card{
+  background:white;border:1px solid var(--border);
+  border-radius:16px;padding:20px;
+  display:flex;align-items:flex-start;gap:14px;
+  transition:transform .2s var(--ease),box-shadow .2s;
+}
+.prob-card:hover{transform:translateX(4px);box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.prob-icon{
+  width:42px;height:42px;border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;flex-shrink:0;
+}
+.prob-title{font-size:14px;font-weight:600;color:var(--text);margin-bottom:4px}
+.prob-body{font-size:13px;color:var(--slate);line-height:1.55}
+
+/* ════════════════════════════════════════════════════════════
+   HOW IT WORKS
+════════════════════════════════════════════════════════════ */
+.how-section{
+  padding:80px 20px;
+  background:var(--navy);
+}
+.how-inner{max-width:680px;margin:0 auto}
+.how-eyebrow{
+  font-size:11px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;color:#7DD3FC;margin-bottom:10px;
+}
+.how-h2{
+  font-family:var(--heading);
+  font-size:clamp(28px,7vw,42px);
+  font-weight:800;line-height:1.08;
+  letter-spacing:-1px;color:white;margin-bottom:36px;
+}
+.how-h2 em{font-style:italic;color:#93C5FD}
+
+.steps{display:flex;flex-direction:column;gap:0}
+.step{
+  display:flex;gap:16px;padding:24px 0;
+  border-bottom:1px solid rgba(255,255,255,.08);
+  position:relative;
+}
+.step:last-child{border-bottom:none}
+.step-left{display:flex;flex-direction:column;align-items:center;gap:0;flex-shrink:0}
+.step-num-badge{
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,.08);
+  border:1px solid rgba(255,255,255,.15);
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--heading);font-size:14px;font-weight:700;
+  color:rgba(255,255,255,.6);flex-shrink:0;
+}
+.step-connector{
+  width:1px;flex:1;margin-top:8px;
+  background:rgba(255,255,255,.1);
+  min-height:24px;
+}
+.step:last-child .step-connector{display:none}
+.step-content{padding-top:8px}
+.step-icon-label{
+  display:flex;align-items:center;gap:8px;margin-bottom:8px;
+}
+.step-ico{
+  width:28px;height:28px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:16px;flex-shrink:0;
+}
+.step-title{font-family:var(--heading);font-size:16px;font-weight:700;color:white}
+.step-body{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6}
+
+/* ════════════════════════════════════════════════════════════
+   ROLES PREVIEW STRIP
+════════════════════════════════════════════════════════════ */
+.roles-section{padding:80px 20px;background:var(--bg)}
+.roles-inner{max-width:680px;margin:0 auto}
+.roles-scroll{
+  display:flex;gap:12px;
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+  padding-bottom:4px;
+  margin:0 -20px;
+  padding-left:20px;
+  padding-right:20px;
+}
+.roles-scroll::-webkit-scrollbar{display:none}
+
+.role-preview-card{
+  flex-shrink:0;width:180px;
+  background:white;border:1.5px solid var(--border);
+  border-radius:16px;padding:20px 16px;
+  cursor:pointer;
+  transition:all .25s var(--ease);
+  position:relative;overflow:hidden;
+}
+.role-preview-card::after{
+  content:'';
+  position:absolute;bottom:0;left:0;right:0;height:3px;
+  background:var(--rc);
+  transform:scaleX(0);transform-origin:left;
+  transition:transform .25s;
+}
+.role-preview-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 12px 32px rgba(0,0,0,.1);
+  border-color:var(--rc);
+}
+.role-preview-card:hover::after{transform:scaleX(1)}
+.rpc-icon{font-size:28px;margin-bottom:12px}
+.rpc-name{font-size:13px;font-weight:700;color:var(--text);margin-bottom:6px}
+.rpc-desc{font-size:11px;color:var(--slate);line-height:1.5}
+.rpc-enter{
+  margin-top:14px;font-size:11px;font-weight:600;
+  color:var(--rc);display:flex;align-items:center;gap:4px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   FINAL CTA
+════════════════════════════════════════════════════════════ */
+.cta-section{
+  padding:80px 20px;
+  background:white;
+  border-top:1px solid var(--border);
+  text-align:center;
+}
+.cta-h2{
+  font-family:var(--heading);
+  font-size:clamp(28px,7vw,44px);
+  font-weight:800;line-height:1.08;
+  letter-spacing:-1px;color:var(--text);
+  margin-bottom:14px;
+}
+.cta-sub{
+  font-size:15px;color:var(--slate);
+  line-height:1.7;max-width:400px;
+  margin:0 auto 32px;
+}
+.cta-btn{
+  display:inline-flex;align-items:center;gap:10px;
+  background:var(--navy);color:white;border:none;
+  border-radius:14px;padding:16px 32px;
+  font-size:15px;font-weight:700;font-family:var(--heading);
+  cursor:pointer;transition:all .2s;
+  box-shadow:0 4px 20px rgba(13,31,53,.2);
+}
+.cta-btn:hover{background:var(--navy2);transform:translateY(-2px)}
+
+/* ════════════════════════════════════════════════════════════
+   FOOTER
+════════════════════════════════════════════════════════════ */
+footer{
+  padding:24px 20px;
+  border-top:1px solid var(--border);
+  background:var(--bg);
+  text-align:center;
+}
+.footer-text{font-size:11px;color:var(--muted);line-height:1.6}
+
+/* ════════════════════════════════════════════════════════════
+   BOTTOM SHEET — ROLE SELECTION
+════════════════════════════════════════════════════════════ */
+.sheet-overlay{
+  position:fixed;inset:0;z-index:200;
+  background:rgba(13,31,53,0);
+  pointer-events:none;
+  transition:background .3s var(--ease);
+}
+.sheet-overlay.open{
+  background:rgba(13,31,53,.55);
+  pointer-events:all;
+  backdrop-filter:blur(4px);
+  -webkit-backdrop-filter:blur(4px);
+}
+
+.sheet{
+  position:absolute;bottom:0;left:0;right:0;
+  background:white;
+  border-radius:24px 24px 0 0;
+  padding:0 20px 40px;
+  transform:translateY(100%);
+  transition:transform .35s var(--ease);
+  max-height:92dvh;
+  overflow-y:auto;
+}
+.sheet-overlay.open .sheet{transform:translateY(0)}
+
+.sheet-handle{
+  width:40px;height:4px;border-radius:2px;
+  background:var(--border);
+  margin:12px auto 24px;
+}
+
+.sheet-title{
+  font-family:var(--heading);font-size:20px;
+  font-weight:800;color:var(--text);
+  margin-bottom:6px;letter-spacing:-.5px;
+}
+.sheet-sub{font-size:13px;color:var(--slate);margin-bottom:24px;line-height:1.5}
+
+/* Role rows inside sheet */
+.role-rows{display:flex;flex-direction:column;gap:10px}
+.role-row{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 16px;
+  border:1.5px solid var(--border);border-radius:16px;
+  cursor:pointer;background:white;width:100%;text-align:left;
+  font-family:var(--body);
+  transition:all .2s var(--ease);
+  position:relative;
+}
+.role-row:hover{
+  border-color:var(--rc);
+  background:var(--rb);
+  transform:translateX(3px);
+}
+.role-row-icon{
+  width:46px;height:46px;border-radius:13px;
+  background:var(--rb);
+  display:flex;align-items:center;justify-content:center;
+  font-size:22px;flex-shrink:0;
+  transition:background .2s;
+}
+.role-row:hover .role-row-icon{background:var(--rc)}
+.role-row-text{flex:1}
+.role-row-name{font-size:15px;font-weight:700;color:var(--text);margin-bottom:2px}
+.role-row-desc{font-size:12px;color:var(--slate)}
+.role-row-chevron{color:var(--muted);font-size:18px;transition:color .2s,transform .2s}
+.role-row:hover .role-row-chevron{color:var(--rc);transform:translateX(3px)}
+
+.sheet-note{
+  margin-top:20px;
+  font-size:11px;color:var(--muted);text-align:center;line-height:1.6;
+}
+
+/* ════════════════════════════════════════════════════════════
+   LOGIN SCREEN — slides in over the sheet
+════════════════════════════════════════════════════════════ */
+.login-screen{
+  position:fixed;inset:0;z-index:300;
+  background:white;
+  transform:translateX(100%);
+  transition:transform .3s var(--ease);
+  display:flex;flex-direction:column;
+  overflow-y:auto;
+}
+.login-screen.open{transform:translateX(0)}
+
+.login-header{
+  display:flex;align-items:center;gap:12px;
+  padding:16px 20px;
+  border-bottom:1px solid var(--border);
+  background:white;
+  position:sticky;top:0;z-index:1;
+}
+.login-back{
+  width:38px;height:38px;border-radius:10px;
+  background:var(--bg);border:none;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  font-size:20px;color:var(--slate);
+  transition:background .15s;flex-shrink:0;
+}
+.login-back:hover{background:var(--border)}
+.login-header-title{font-size:15px;font-weight:600;color:var(--text)}
+
+.login-body{flex:1;padding:32px 20px 48px}
+
+.login-role-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:8px 14px;border-radius:20px;
+  font-size:13px;font-weight:600;
+  margin-bottom:24px;
+}
+.login-h2{
+  font-family:var(--heading);font-size:28px;
+  font-weight:800;color:var(--text);
+  letter-spacing:-.7px;margin-bottom:6px;line-height:1.1;
+}
+.login-sub{
+  font-size:14px;color:var(--slate);
+  line-height:1.6;margin-bottom:32px;
+}
+
+.form-group{display:flex;flex-direction:column;gap:12px;margin-bottom:20px}
+.form-field{position:relative}
+.form-label{
+  font-size:12px;font-weight:600;color:var(--slate);
+  margin-bottom:6px;display:block;
+}
+.form-input{
+  width:100%;padding:14px 16px;
+  border:1.5px solid var(--border);border-radius:12px;
+  font-size:15px;font-family:var(--body);color:var(--text);
+  background:var(--bg);
+  transition:border-color .2s,background .2s,box-shadow .2s;
+  -webkit-appearance:none;
+}
+.form-input:focus{
+  outline:none;
+  border-color:var(--fc);
+  background:white;
+  box-shadow:0 0 0 4px var(--fs);
+}
+.form-input::placeholder{color:var(--muted)}
+
+.forgot-link{
+  font-size:12px;color:var(--muted);text-align:right;
+  display:block;text-decoration:none;
+  transition:color .2s;margin-top:-4px;
+}
+.forgot-link:hover{color:var(--slate)}
+
+.form-btn{
+  width:100%;padding:16px;border:none;border-radius:14px;
+  font-size:16px;font-weight:700;font-family:var(--heading);
+  color:white;cursor:pointer;
+  background:var(--fc);
+  transition:filter .2s,transform .15s,box-shadow .2s;
+  box-shadow:0 4px 16px var(--fs2);
+}
+.form-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.form-btn:active{transform:translateY(0)}
+
+.form-divider{
+  display:flex;align-items:center;gap:12px;margin:20px 0;
+}
+.form-divider hr{flex:1;border:none;border-top:1px solid var(--border)}
+.form-divider span{font-size:12px;color:var(--muted);white-space:nowrap}
+
+.form-register{
+  width:100%;padding:14px;border:1.5px solid var(--border);
+  border-radius:14px;font-size:14px;font-weight:600;
+  font-family:var(--body);color:var(--text);
+  background:white;cursor:pointer;
+  transition:border-color .2s,background .2s;
+}
+.form-register:hover{border-color:#94A3B8;background:var(--bg)}
+
+.login-note{
+  font-size:11px;color:var(--muted);
+  text-align:center;line-height:1.6;margin-top:20px;
+}
+.login-note a{color:var(--blue);text-decoration:none}
+
+/* ════════════════════════════════════════════════════════════
+   SHEET — SIGN IN LINK ROW
+════════════════════════════════════════════════════════════ */
+.sheet-divider-row{
+  display:flex;align-items:center;justify-content:center;gap:8px;
+  margin-top:20px;font-size:13px;color:var(--slate);
+}
+.sheet-signin-link{
+  background:none;border:none;font-size:13px;font-weight:600;
+  color:var(--blue);cursor:pointer;font-family:var(--body);
+  padding:0;transition:opacity .2s;
+}
+.sheet-signin-link:hover{opacity:.75}
+
+/* ════════════════════════════════════════════════════════════
+   REGISTRATION — PROGRESS BAR
+════════════════════════════════════════════════════════════ */
+.reg-progress-wrap{
+  height:3px;background:var(--border);
+  position:sticky;top:60px;z-index:1;
+}
+.reg-progress-bar{
+  height:100%;background:var(--fc,var(--navy));
+  transition:width .4s cubic-bezier(.25,.46,.45,.94);
+}
+.reg-step-badge{
+  margin-left:auto;font-size:11px;font-weight:600;
+  color:var(--muted);white-space:nowrap;padding-right:4px;
+}
+
+/* ════════════════════════════════════════════════════════════
+   FORM — EXTRA ELEMENTS FOR REGISTRATION
+════════════════════════════════════════════════════════════ */
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.form-hint{font-size:11px;color:var(--muted);margin-top:5px;line-height:1.5;display:block}
+.form-select{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%2394A3B8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:40px;cursor:pointer}
+
+.check-grid{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.check-pill{
+  display:flex;align-items:center;gap:6px;
+  padding:8px 12px;border:1.5px solid var(--border);
+  border-radius:20px;cursor:pointer;font-size:13px;
+  font-family:var(--body);color:var(--slate);
+  transition:border-color .2s,background .2s,color .2s;
+  user-select:none;
+}
+.check-pill:hover{border-color:#94A3B8;background:var(--bg)}
+.check-pill input{accent-color:var(--fc,var(--navy));cursor:pointer}
+
+.radio-row{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.radio-pill{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;border:1.5px solid var(--border);
+  border-radius:12px;cursor:pointer;font-size:13px;
+  font-family:var(--body);color:var(--text);
+  transition:border-color .2s,background .2s;
+  user-select:none;
+}
+.radio-pill:hover{border-color:#94A3B8;background:var(--bg)}
+.radio-pill input{accent-color:var(--fc,var(--navy));cursor:pointer}
+
+.callout-info{
+  display:flex;gap:10px;align-items:flex-start;
+  background:#EFF6FF;border-radius:12px;
+  padding:12px 14px;font-size:12px;color:var(--slate);line-height:1.5;
+  border:1px solid #BFDBFE;
+}
+
+.form-check-row{
+  display:flex;align-items:flex-start;gap:10px;
+  padding:12px 0 0;
+}
+.form-check{
+  accent-color:var(--fc,var(--navy));
+  width:16px;height:16px;flex-shrink:0;margin-top:2px;cursor:pointer;
+}
+.form-check-label{font-size:12px;color:var(--slate);line-height:1.5;cursor:pointer}
+.form-check-label a{color:var(--blue);text-decoration:none}
+
+/* "What happens next" block */
+.reg-next-info{
+  display:flex;gap:12px;align-items:flex-start;
+  background:var(--nb,#EEF2FF);
+  border-radius:14px;padding:14px;margin-bottom:20px;
+  border:1.5px solid color-mix(in srgb,var(--ni,#6D28D9) 20%,transparent);
+}
+.reg-next-icon{
+  width:36px;height:36px;border-radius:10px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;
+}
+.reg-next-title{font-size:13px;font-weight:700;color:var(--text);margin-bottom:3px}
+.reg-next-body{font-size:12px;color:var(--slate);line-height:1.5}
+
+/* ── Desktop modal override for register screen ── */
+@media(min-width:768px){
+  #registerCard{max-width:520px}
+  .form-row-2{grid-template-columns:1fr 1fr}
+}
+
+/* ════════════════════════════════════════════════════════════
+   SCROLL ANIMATIONS
+════════════════════════════════════════════════════════════ */
+.reveal{
+  opacity:0;transform:translateY(28px);
+  transition:opacity .6s var(--ease),transform .6s var(--ease);
+}
+.reveal.in{opacity:1;transform:translateY(0)}
+.reveal:nth-child(2){transition-delay:.08s}
+.reveal:nth-child(3){transition-delay:.16s}
+.reveal:nth-child(4){transition-delay:.24s}
+
+/* ════════════════════════════════════════════════════════════
+   DESKTOP OVERRIDES (≥768px)
+════════════════════════════════════════════════════════════ */
+@media(min-width:768px){
+  .nav{padding:0 40px;height:68px}
+  .nav-mark{width:38px;height:38px;font-size:13px}
+
+  .hero{padding:100px 40px 80px}
+  .hero-h1{font-size:clamp(48px,6vw,72px)}
+  .btn-primary-hero{max-width:280px;padding:18px 28px;font-size:17px}
+  .hero-stats{max-width:480px}
+
+  .section{padding:100px 40px}
+  .section-inner{max-width:760px}
+
+  .problem-cards{
+    display:grid;grid-template-columns:1fr 1fr;gap:14px;
+  }
+
+  .how-section{padding:100px 40px}
+  .how-inner{max-width:760px}
+
+  .roles-section{padding:100px 40px}
+  .roles-inner{max-width:760px}
+  .roles-scroll{
+    margin:0;padding:0;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    overflow:visible;
+  }
+
+  .cta-section{padding:100px 40px}
+
+  /* Desktop: sheet becomes a centered modal */
+  .sheet{
+    position:absolute;
+    top:50%;bottom:auto;
+    left:50%;right:auto;
+    transform:translate(-50%,-40%) scale(.96);
+    opacity:0;
+    border-radius:24px;
+    max-width:460px;
+    width:calc(100% - 48px);
+    padding:0 28px 36px;
+    box-shadow:0 24px 80px rgba(13,31,53,.2);
+    max-height:85dvh;
+    transition:transform .3s var(--ease),opacity .3s;
+  }
+  .sheet-overlay.open .sheet{
+    transform:translate(-50%,-50%) scale(1);
+    opacity:1;
+  }
+
+  /* Desktop: login screen is a centered card */
+  .login-screen{
+    align-items:center;justify-content:center;
+    background:rgba(13,31,53,.55);
+    backdrop-filter:blur(4px);
+    -webkit-backdrop-filter:blur(4px);
+  }
+  .login-screen.open{transform:none}
+  .login-screen:not(.open){display:none}
+
+  .login-card{
+    background:white;border-radius:24px;
+    max-width:440px;width:calc(100% - 48px);
+    box-shadow:0 24px 80px rgba(13,31,53,.2);
+    overflow:hidden;
+    animation:cardIn .25s var(--ease) both;
+  }
+  @keyframes cardIn{
+    from{opacity:0;transform:translateY(20px) scale(.97)}
+    to{opacity:1;transform:translateY(0) scale(1)}
+  }
+  .login-header{border-radius:0}
+  .login-body{padding:28px 28px 36px}
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════════════
+  NAV
+══════════════════════════════════════════════════════ -->
+<nav class="nav" role="navigation" aria-label="Main navigation">
+  <a href="#" class="nav-brand" aria-label="LASU LIMDP home">
+    <div class="nav-mark" aria-hidden="true">Lim</div>
+    <span class="nav-name">LASU LIMDP</span>
+  </a>
+  <div class="nav-right">
+    <button class="nav-signin" onclick="openSignIn()" aria-label="Sign in to your account">Sign in</button>
+    <button class="nav-start" onclick="openSheet()" aria-label="Get started with LIMDP">Get started</button>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+  HERO
+══════════════════════════════════════════════════════ -->
+<section class="hero" aria-label="Hero">
+  <div class="hero-inner">
+    <div class="hero-pill" aria-label="Live platform status">
+      <span class="live-dot" aria-hidden="true"></span>
+      SIWES Platform · Lagos State University
+    </div>
+
+    <h1 class="hero-h1">
+      Smarter<br>internships<br><span>start here.</span>
+    </h1>
+
+    <p class="hero-sub">
+      LIMDP replaces manual SIWES processes with a platform that intelligently matches students to internships, tracks real growth, and gives every stakeholder full visibility.
+    </p>
+
+    <div class="hero-actions">
+      <button class="btn-primary-hero" onclick="openSheet()" aria-label="Get started - opens registration selection">
+        Get started
+        <span class="btn-primary-arrow" aria-hidden="true">→</span>
+      </button>
+      <button class="btn-ghost-hero" onclick="document.getElementById('problem').scrollIntoView({behavior:'smooth'})">
+        See how it works
+      </button>
+    </div>
+
+    <div class="hero-stats" role="list" aria-label="Platform statistics">
+      <div class="hstat" role="listitem">
+        <div class="hstat-num">60%</div>
+        <div class="hstat-label">Less admin paperwork</div>
+      </div>
+      <div class="hstat" role="listitem">
+        <div class="hstat-num">3</div>
+        <div class="hstat-label">Primary roles, one app</div>
+      </div>
+      <div class="hstat" role="listitem">
+        <div class="hstat-num">12</div>
+        <div class="hstat-label">Systems reviewed</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  PROBLEM
+══════════════════════════════════════════════════════ -->
+<section class="section" id="problem" aria-labelledby="problem-title">
+  <div class="section-inner">
+    <p class="eyebrow">The problem</p>
+    <h2 class="section-h2" id="problem-title">SIWES is broken.<br>Everyone knows it.</h2>
+    <p class="section-body">Every year, thousands of LASU students navigate Nigeria's mandatory internship program through a fragmented, paper-based system that fails them, their supervisors, and industry partners.</p>
+
+    <div class="problem-cards">
+      <div class="prob-card reveal">
+        <div class="prob-icon" style="background:#FEF2F2">❌</div>
+        <div>
+          <div class="prob-title">No intelligent matching</div>
+          <div class="prob-body">Students land in misaligned roles. Companies receive unqualified interns. No algorithm — just manual guesswork.</div>
+        </div>
+      </div>
+      <div class="prob-card reveal">
+        <div class="prob-icon" style="background:#FFFBEB">⚠️</div>
+        <div>
+          <div class="prob-title">No equity enforcement</div>
+          <div class="prob-body">High-CGPA students monopolize opportunities. Tier 2 and 3 students remain unplaced with no structural protection.</div>
+        </div>
+      </div>
+      <div class="prob-card reveal">
+        <div class="prob-icon" style="background:#EEF2FF">📋</div>
+        <div>
+          <div class="prob-title">Paper logbooks, zero tracking</div>
+          <div class="prob-body">Attendance is logged, not competency. Supervisors disengage. Problems surface only at end of internship.</div>
+        </div>
+      </div>
+      <div class="prob-card reveal">
+        <div class="prob-icon" style="background:#ECFDF5">🔗</div>
+        <div>
+          <div class="prob-title">Assessment misalignment</div>
+          <div class="prob-body">University and company criteria never meet. Students are evaluated on rubrics they were never shown.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  HOW IT WORKS
+══════════════════════════════════════════════════════ -->
+<section class="how-section" id="how" aria-labelledby="how-title">
+  <div class="how-inner">
+    <p class="how-eyebrow">How it works</p>
+    <h2 class="how-h2" id="how-title">From enrollment<br>to placement to <em>assessment.</em></h2>
+
+    <div class="steps" role="list">
+      <div class="step reveal" role="listitem">
+        <div class="step-left" aria-hidden="true">
+          <div class="step-num-badge">01</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-icon-label">
+            <div class="step-ico" style="background:rgba(167,139,250,.15)">🧙</div>
+            <div class="step-title">8-Step Onboarding Wizard</div>
+          </div>
+          <p class="step-body">Students build a verified profile — Job Family, skills, projects, preferences — and receive an instant Fit Score before they even apply.</p>
+        </div>
+      </div>
+
+      <div class="step reveal" role="listitem">
+        <div class="step-left" aria-hidden="true">
+          <div class="step-num-badge">02</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-icon-label">
+            <div class="step-ico" style="background:rgba(134,239,172,.15)">⚡</div>
+            <div class="step-title">Skill Verification Tests</div>
+          </div>
+          <p class="step-body">Adaptive MCQ, coding, and scenario-based tests validate self-assessed skills and surface genuine competency gaps with learning pathways.</p>
+        </div>
+      </div>
+
+      <div class="step reveal" role="listitem">
+        <div class="step-left" aria-hidden="true">
+          <div class="step-num-badge">03</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-icon-label">
+            <div class="step-ico" style="background:rgba(251,191,36,.15)">🎯</div>
+            <div class="step-title">Dual-Track Fair Matching</div>
+          </div>
+          <p class="step-body">The WSM algorithm pairs students with internships. Equity Track enforces T1→T2→T3 interleaving so every student gets a chance.</p>
+        </div>
+      </div>
+
+      <div class="step reveal" role="listitem">
+        <div class="step-left" aria-hidden="true">
+          <div class="step-num-badge">04</div>
+          <div class="step-connector"></div>
+        </div>
+        <div class="step-content">
+          <div class="step-icon-label">
+            <div class="step-ico" style="background:rgba(147,197,253,.15)">📊</div>
+            <div class="step-title">Weekly Pulse Dashboard</div>
+          </div>
+          <p class="step-body">SMART micro-goals, pinned evidence, Sunday reflections, and supervisor endorsements replace the paper logbook. Real growth, tracked weekly.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  ROLES PREVIEW
+══════════════════════════════════════════════════════ -->
+<section class="roles-section" aria-labelledby="roles-title">
+  <div class="roles-inner">
+    <p class="eyebrow">For every stakeholder</p>
+    <h2 class="section-h2" id="roles-title" style="margin-bottom:8px">One platform.<br>Two entry points.</h2>
+    <p class="section-body" style="margin-bottom:28px">Students and company reps register directly. Department reps, supervisors, and lecturers are provisioned by admins or their respective reps after placement — keeping access clean and accountable.</p>
+
+    <div class="roles-scroll" role="list">
+      <div class="role-preview-card reveal" data-role="student"
+           style="--rc:#6D28D9;--rb:#EEF2FF"
+           onclick="openSignIn()"
+           role="listitem" aria-label="Student portal">
+        <div class="rpc-icon">🎓</div>
+        <div class="rpc-name">Student</div>
+        <div class="rpc-desc">Complete your 8-step profile, get matched, and track progress weekly.</div>
+        <div class="rpc-enter">Sign in <span>→</span></div>
+      </div>
+
+      <div class="role-preview-card reveal" data-role="company"
+           style="--rc:#047857;--rb:#ECFDF5"
+           onclick="openSignIn()"
+           role="listitem" aria-label="Company Rep portal">
+        <div class="rpc-icon">🏢</div>
+        <div class="rpc-name">Company Rep</div>
+        <div class="rpc-desc">Register your org, post internships, and create accounts for your industry supervisors.</div>
+        <div class="rpc-enter">Sign in <span>→</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════════════
+  CTA
+══════════════════════════════════════════════════════ -->
+<section class="cta-section" aria-label="Call to action">
+  <h2 class="cta-h2">Ready to fix SIWES for good?</h2>
+  <p class="cta-sub">Join the platform that gives every LASU student a fair shot at the right internship.</p>
+  <button class="cta-btn" onclick="openSheet()">
+    Create your account →
+  </button>
+</section>
+
+<!-- FOOTER -->
+<footer role="contentinfo">
+  <p class="footer-text">
+    © 2026 LASU Faculty of Computing & Information Technology · SIWES Division<br>
+    Secure · SIWES Compliant · Data Encrypted
+  </p>
+</footer>
+
+
+<!-- ══════════════════════════════════════════════════════
+  BOTTOM SHEET — GET STARTED (3 roles)
+══════════════════════════════════════════════════════ -->
+<div class="sheet-overlay" id="sheetOverlay" role="dialog" aria-modal="true" aria-label="Choose how to get started">
+  <div class="sheet" id="sheet">
+    <div class="sheet-handle" aria-hidden="true"></div>
+    <h2 class="sheet-title">Create an account</h2>
+    <p class="sheet-sub">Two ways to get started. Supervisors and lecturers are added by their rep after placements are confirmed — they don't register here.</p>
+
+    <div class="role-rows" role="list">
+
+      <button class="role-row" style="--rc:#6D28D9;--rb:#EEF2FF"
+              onclick="openRegister('student')"
+              role="listitem" aria-label="Register as a Student">
+        <div class="role-row-icon">🎓</div>
+        <div class="role-row-text">
+          <div class="role-row-name">Student</div>
+          <div class="role-row-desc">LASU undergraduate · SIWES participant · 8-step onboarding</div>
+        </div>
+        <span class="role-row-chevron" aria-hidden="true">›</span>
+      </button>
+
+      <button class="role-row" style="--rc:#047857;--rb:#ECFDF5"
+              onclick="openRegister('company')"
+              role="listitem" aria-label="Register as a Company Representative">
+        <div class="role-row-icon">🏢</div>
+        <div class="role-row-text">
+          <div class="role-row-name">Company Representative</div>
+          <div class="role-row-desc">Register your organization · Post internships · Manage supervisors</div>
+        </div>
+        <span class="role-row-chevron" aria-hidden="true">›</span>
+      </button>
+
+    </div>
+
+    <div class="sheet-divider-row">
+      <span>Already have an account?</span>
+      <button class="sheet-signin-link" onclick="closeSheet(); openSignIn();">Sign in →</button>
+    </div>
+
+    <p class="sheet-note">🔒 LASU-verified · All sessions encrypted · SIWES compliant</p>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+  SIGN IN SCREEN — universal, no role selection
+══════════════════════════════════════════════════════ -->
+<div class="login-screen" id="signInScreen" role="dialog" aria-modal="true" aria-label="Sign in">
+  <div class="login-card" id="signInCard">
+    <div class="login-header">
+      <button class="login-back" onclick="closeSignIn()" aria-label="Close sign in">←</button>
+      <span class="login-header-title">Sign in to LIMDP</span>
+    </div>
+    <div class="login-body">
+      <h2 class="login-h2" style="margin-bottom:6px">Welcome back.</h2>
+      <p class="login-sub">Enter your credentials — the system will recognise your role automatically.</p>
+
+      <div class="form-group">
+        <div class="form-field">
+          <label class="form-label" for="siIdentifier">Username or email</label>
+          <input type="text" class="form-input" id="siIdentifier"
+                 placeholder="e.g. john.doe or john@student.lasu.edu.ng"
+                 autocomplete="username">
+        </div>
+        <div class="form-field">
+          <label class="form-label" for="siPassword">Password</label>
+          <input type="password" class="form-input" id="siPassword"
+                 placeholder="Enter your password" autocomplete="current-password">
+        </div>
+        <a href="#" class="forgot-link">Forgot password?</a>
+      </div>
+
+      <button class="form-btn" style="background:var(--navy);box-shadow:0 4px 16px rgba(13,31,53,.25)">
+        Sign in
+      </button>
+
+      <div class="form-divider"><hr><span>new here?</span><hr></div>
+
+      <button class="form-register" onclick="closeSignIn(); openSheet();">Create an account →</button>
+
+      <p class="login-note">
+        Your role is detected automatically after sign in.<br>
+        <a href="#">Need help? Contact SIWES support</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════════════════
+  REGISTRATION SCREEN — multi-step, role-aware
+══════════════════════════════════════════════════════ -->
+<div class="login-screen" id="registerScreen" role="dialog" aria-modal="true" aria-label="Create account">
+  <div class="login-card" id="registerCard">
+
+    <div class="login-header">
+      <button class="login-back" id="regBackBtn" onclick="regGoBack()" aria-label="Go back"></button>
+      <span class="login-header-title" id="regHeaderTitle">Create account</span>
+      <span class="reg-step-badge" id="regStepBadge">Step 1</span>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="reg-progress-wrap">
+      <div class="reg-progress-bar" id="regProgressBar" style="width:33%"></div>
+    </div>
+
+    <div class="login-body" id="regBody">
+      <!-- content injected by JS -->
+    </div>
+
+  </div>
+</div>
+
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   SIGN IN
+════════════════════════════════════════════════════════════ */
+function openSignIn() {
+  closeSheet();
+  document.getElementById('signInScreen').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => document.getElementById('siIdentifier')?.focus(), 350);
+}
+function closeSignIn() {
+  document.getElementById('signInScreen').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ════════════════════════════════════════════════════════════
+   GET STARTED SHEET
+════════════════════════════════════════════════════════════ */
+function openSheet() {
+  const overlay = document.getElementById('sheetOverlay');
+  overlay.classList.add('open');
+  document.body.style.overflow = 'hidden';
+  setTimeout(() => overlay.querySelector('.role-row')?.focus(), 350);
+}
+function closeSheet() {
+  document.getElementById('sheetOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('sheetOverlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('sheetOverlay')) closeSheet();
+});
+
+/* ════════════════════════════════════════════════════════════
+   REGISTRATION — MULTI-STEP ENGINE
+════════════════════════════════════════════════════════════ */
+
+const REG_STEPS = {
+
+  student: [
+    {
+      id: 'student-1',
+      title: 'Personal details',
+      badge: 'Step 1 of 3',
+      progress: 33,
+      color: '#6D28D9',
+      chip: '🎓 Student Registration',
+      chipBg: '#EEF2FF',
+      html: `
+        <div class="login-role-chip" style="background:#EEF2FF;color:#6D28D9">🎓 Student Registration</div>
+        <h2 class="login-h2">Let's get you started.</h2>
+        <p class="login-sub">First, tell us who you are. You'll complete your full profile in the 8-step onboarding wizard after this.</p>
+        <div class="form-group">
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="form-label">First name</label>
+              <input type="text" class="form-input" placeholder="e.g. Adaeze" autocomplete="given-name">
+            </div>
+            <div class="form-field">
+              <label class="form-label">Last name</label>
+              <input type="text" class="form-input" placeholder="e.g. Okafor" autocomplete="family-name">
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">LASU student email</label>
+            <input type="email" class="form-input" placeholder="e.g. adaeze.okafor@student.lasu.edu.ng" autocomplete="email">
+            <span class="form-hint">Must end in @student.lasu.edu.ng</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Matriculation number</label>
+            <input type="text" class="form-input" placeholder="e.g. 190401001">
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 'student-2',
+      title: 'Academic info',
+      badge: 'Step 2 of 3',
+      progress: 66,
+      html: `
+        <div class="login-role-chip" style="background:#EEF2FF;color:#6D28D9">🎓 Student Registration</div>
+        <h2 class="login-h2">Your academic details.</h2>
+        <p class="login-sub">This links you to the right department and SIWES cohort.</p>
+        <div class="form-group">
+          <div class="form-field">
+            <label class="form-label">Faculty</label>
+            <select class="form-input form-select">
+              <option value="">Select faculty…</option>
+              <option>Computing & Information Technology</option>
+              <option>Engineering</option>
+              <option>Science</option>
+              <option>Management Sciences</option>
+              <option>Environmental Sciences</option>
+              <option>Law</option>
+              <option>Social Sciences</option>
+              <option>Arts & Humanities</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Department</label>
+            <select class="form-input form-select">
+              <option value="">Select department…</option>
+              <option>Computer Science</option>
+              <option>Information Technology</option>
+              <option>Electrical Engineering</option>
+              <option>Mechanical Engineering</option>
+              <option>Accounting</option>
+              <option>Business Administration</option>
+            </select>
+          </div>
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="form-label">Year of study</label>
+              <select class="form-input form-select">
+                <option value="">Year…</option>
+                <option>200 Level</option>
+                <option>300 Level</option>
+                <option>400 Level</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">CGPA (approx.)</label>
+              <input type="number" class="form-input" placeholder="e.g. 3.4" min="0" max="5" step="0.01">
+            </div>
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 'student-3',
+      title: 'Set password',
+      badge: 'Step 3 of 3',
+      progress: 100,
+      html: `
+        <div class="login-role-chip" style="background:#EEF2FF;color:#6D28D9">🎓 Student Registration</div>
+        <h2 class="login-h2">Create your password.</h2>
+        <p class="login-sub">Choose a strong password. After this, you'll complete your 8-step SIWES profile.</p>
+        <div class="form-group">
+          <div class="form-field">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-input" placeholder="Choose a username" autocomplete="username">
+            <span class="form-hint">Letters, numbers, underscores only</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" placeholder="Min. 8 characters" autocomplete="new-password">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Confirm password</label>
+            <input type="password" class="form-input" placeholder="Repeat password" autocomplete="new-password">
+          </div>
+          <div class="form-check-row">
+            <input type="checkbox" id="stuTerms" class="form-check">
+            <label for="stuTerms" class="form-check-label">I agree to the <a href="#">LASU SIWES platform terms</a></label>
+          </div>
+        </div>
+        <div class="reg-next-info">
+          <div class="reg-next-icon">🧙</div>
+          <div>
+            <div class="reg-next-title">Next: 8-Step Onboarding Wizard</div>
+            <div class="reg-next-body">After registration you'll complete your Job Family selection, skill profile, and get your first Fit Score.</div>
+          </div>
+        </div>
+      `,
+      finalBtn: 'Create student account →',
+      finalColor: '#6D28D9',
+      finalShadow: 'rgba(109,40,217,.3)'
+    }
+  ],
+
+  company: [
+    {
+      id: 'company-1',
+      title: 'Organisation identity',
+      badge: 'Step 1 of 6',
+      progress: 17,
+      html: `
+        <div class="login-role-chip" style="background:#ECFDF5;color:#047857">🏢 Company Registration</div>
+        <h2 class="login-h2">Tell us about your organisation.</h2>
+        <p class="login-sub">Start with the basics — your legal name and registration details. This is the foundation of your profile on the platform.</p>
+        <div class="form-group">
+          <div class="form-field">
+            <label class="form-label">Registered company / organisation name <span class="req">*</span></label>
+            <input type="text" class="form-input" placeholder="e.g. Flutterwave Technology Solutions Ltd" autocomplete="organization">
+            <span class="form-hint">Enter the exact legal name as registered with CAC. This cannot be changed after verification.</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Trading name <span class="form-label-opt">(if different from registered name)</span></label>
+            <input type="text" class="form-input" placeholder="e.g. Flutterwave">
+          </div>
+          <div class="form-field">
+            <label class="form-label">CAC registration number (RC Number) <span class="req">*</span></label>
+            <input type="text" class="form-input" placeholder="e.g. RC-1234567">
+            <span class="form-hint">Your RC number is on your Certificate of Incorporation. We will verify this against the CAC database.</span>
+          </div>
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="form-label">Business type <span class="req">*</span></label>
+              <select class="form-input form-select">
+                <option value="">Select…</option>
+                <option>Limited Liability Company (Ltd)</option>
+                <option>Public Limited Company (PLC)</option>
+                <option>Business Name</option>
+                <option>Incorporated Trustees</option>
+                <option>Sole Proprietorship</option>
+                <option>Partnership</option>
+                <option>Government Agency / Parastatal</option>
+                <option>NGO / Non-Profit</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Year of incorporation <span class="req">*</span></label>
+              <input type="number" class="form-input" placeholder="e.g. 2018" min="1900" max="2026">
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Tax Identification Number (TIN) <span class="form-label-opt">(optional but recommended)</span></label>
+            <input type="text" class="form-input" placeholder="e.g. 12345678-0001">
+            <span class="form-hint">Issued by FIRS. Providing your TIN speeds up the verification process significantly.</span>
+          </div>
+          <div class="callout-info">
+            <span style="font-size:16px">🔒</span>
+            <span>All registration details are cross-checked against the <strong>CAC public database</strong>. Companies that cannot be verified will not receive platform access. <a href="#" style="color:#1D4ED8">Learn about our verification process →</a></span>
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 'company-2',
+      title: 'Organisation profile',
+      badge: 'Step 2 of 6',
+      progress: 33,
+      html: `
+        <div class="login-role-chip" style="background:#ECFDF5;color:#047857">🏢 Company Registration</div>
+        <h2 class="login-h2">Shape your company profile.</h2>
+        <p class="login-sub">Students will read this when deciding whether to apply to your internships. A complete profile significantly increases the quality of applicants you receive.</p>
+        <div class="form-group">
+          <div class="form-field">
+            <label class="form-label">Industry sector <span class="req">*</span></label>
+            <select class="form-input form-select">
+              <option value="">Select primary sector…</option>
+              <option>Technology & Software</option>
+              <option>Banking & Financial Services</option>
+              <option>Oil, Gas & Energy</option>
+              <option>Telecommunications</option>
+              <option>Healthcare & Pharmaceuticals</option>
+              <option>Manufacturing & Production</option>
+              <option>Consulting & Professional Services</option>
+              <option>Media, Advertising & Communications</option>
+              <option>Logistics, Transport & Supply Chain</option>
+              <option>Real Estate & Construction</option>
+              <option>Education & EdTech</option>
+              <option>Agriculture & Agribusiness</option>
+              <option>Government / Public Sector</option>
+              <option>NGO / Non-Profit / Social Enterprise</option>
+              <option>Retail & E-commerce</option>
+              <option>Other</option>
+            </select>
+          </div>
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="form-label">Company size <span class="req">*</span></label>
+              <select class="form-input form-select">
+                <option value="">Employees…</option>
+                <option>1–10</option>
+                <option>11–50</option>
+                <option>51–200</option>
+                <option>201–500</option>
+                <option>501–1,000</option>
+                <option>1,000+</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Headquarters state <span class="req">*</span></label>
+              <select class="form-input form-select">
+                <option value="">State…</option>
+                <option>Lagos</option>
+                <option>Abuja (FCT)</option>
+                <option>Ogun</option>
+                <option>Oyo</option>
+                <option>Rivers</option>
+                <option>Kano</option>
+                <option>Delta</option>
+                <option>Enugu</option>
+                <option>Other</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Full registered business address <span class="req">*</span></label>
+            <input type="text" class="form-input" placeholder="Street address, LGA, State" autocomplete="street-address">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Official company website <span class="req">*</span></label>
+            <input type="url" class="form-input" placeholder="https://yourcompany.com" autocomplete="url">
+            <span class="form-hint">Must be a live, functional website. We verify this as part of our legitimacy checks.</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Company description <span class="req">*</span></label>
+            <textarea class="form-input form-textarea" placeholder="Briefly describe what your company does, your mission, and why students would want to intern with you. (100–300 words recommended)" rows="4"></textarea>
+            <span class="form-hint">This appears directly on your company page. Write it for a student audience — be clear, specific, and honest.</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Social media presence <span class="form-label-opt">(optional)</span></label>
+            <input type="url" class="form-input" placeholder="LinkedIn company page URL" style="margin-bottom:8px">
+            <input type="text" class="form-input" placeholder="Instagram or Twitter handle (e.g. @yourcompany)">
+            <span class="form-hint">Helps students verify your identity and learn more about your culture. Also used by LASU in verification.</span>
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 'company-3',
+      title: 'Representative details',
+      badge: 'Step 3 of 6',
+      progress: 50,
+      html: `
+        <div class="login-role-chip" style="background:#ECFDF5;color:#047857">🏢 Company Registration</div>
+        <h2 class="login-h2">About you — the company rep.</h2>
+        <p class="login-sub">You are the primary contact and account owner. You will manage all SIWES internship activity on behalf of your organisation. This information is used to verify your authority to register on behalf of the company.</p>
+        <div class="form-group">
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="form-label">First name <span class="req">*</span></label>
+              <input type="text" class="form-input" placeholder="e.g. Chidi" autocomplete="given-name">
+            </div>
+            <div class="form-field">
+              <label class="form-label">Last name <span class="req">*</span></label>
+              <input type="text" class="form-input" placeholder="e.g. Nwosu" autocomplete="family-name">
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Your job title / role <span class="req">*</span></label>
+            <input type="text" class="form-input" placeholder="e.g. HR Manager, Head of Talent, Operations Director">
+            <span class="form-hint">You should be in a position of authority to commit your company to hosting interns. If you are not sure whether this applies to you, consult your HR or management team before proceeding.</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Work email address <span class="req">*</span></label>
+            <input type="email" class="form-input" placeholder="chidi@yourcompany.com" autocomplete="email">
+            <span class="form-hint">Must match your company's registered domain (e.g. @yourcompany.com). This is the address LASU will use for all official communications. Personal email addresses (Gmail, Yahoo, Outlook) are not accepted unless your company uses them as its primary domain — see below if this applies.</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Work phone number <span class="req">*</span></label>
+            <input type="tel" class="form-input" placeholder="+234 800 000 0000" autocomplete="tel">
+          </div>
+          <div class="form-field">
+            <label class="form-label">LinkedIn profile URL <span class="form-label-opt">(strongly recommended)</span></label>
+            <input type="url" class="form-input" placeholder="https://linkedin.com/in/yourprofile">
+            <span class="form-hint">LASU's verification team uses your LinkedIn to cross-check your employment at the company. Accounts without LinkedIn that also lack a company-domain email will require additional documentation (government ID + letter of authority).</span>
+          </div>
+          <div class="callout-info" style="background:#FFFBEB;border-color:#FDE68A">
+            <span style="font-size:16px">⚠️</span>
+            <span>If your work email uses a generic domain (Gmail, Yahoo, Outlook), you will be asked to upload a <strong>letter of authority on company letterhead</strong> at the document verification step. This is standard practice for all internship and job platforms operating in Nigeria.</span>
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 'company-4',
+      title: 'Internship capacity',
+      badge: 'Step 4 of 6',
+      progress: 67,
+      html: `
+        <div class="login-role-chip" style="background:#ECFDF5;color:#047857">🏢 Company Registration</div>
+        <h2 class="login-h2">Your internship offering.</h2>
+        <p class="login-sub">This information feeds directly into the LIMDP matching algorithm. The more accurate your inputs, the better the students you receive. You can update this from your dashboard at any time.</p>
+        <div class="form-group">
+          <div class="form-field">
+            <label class="form-label">How many interns do you expect to take per SIWES cycle? <span class="req">*</span></label>
+            <select class="form-input form-select">
+              <option value="">Select range…</option>
+              <option>1–3 interns</option>
+              <option>4–10 interns</option>
+              <option>11–25 interns</option>
+              <option>26–50 interns</option>
+              <option>50+ interns</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Job families you recruit for <span class="req">*</span> <span class="form-label-opt">(select all that apply)</span></label>
+            <div class="check-grid">
+              <label class="check-pill"><input type="checkbox"> Technology & Software</label>
+              <label class="check-pill"><input type="checkbox"> Business & Finance</label>
+              <label class="check-pill"><input type="checkbox"> Electrical Engineering</label>
+              <label class="check-pill"><input type="checkbox"> Mechanical Engineering</label>
+              <label class="check-pill"><input type="checkbox"> Civil & Structural Eng.</label>
+              <label class="check-pill"><input type="checkbox"> Health Sciences</label>
+              <label class="check-pill"><input type="checkbox"> Media & Communications</label>
+              <label class="check-pill"><input type="checkbox"> Legal & Compliance</label>
+              <label class="check-pill"><input type="checkbox"> Architecture & Design</label>
+              <label class="check-pill"><input type="checkbox"> Education & Research</label>
+              <label class="check-pill"><input type="checkbox"> Environmental Science</label>
+              <label class="check-pill"><input type="checkbox"> Supply Chain & Logistics</label>
+            </div>
+          </div>
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="form-label">Preferred internship duration <span class="req">*</span></label>
+              <select class="form-input form-select">
+                <option value="">Select…</option>
+                <option>3 months (ITF minimum)</option>
+                <option>4 months</option>
+                <option>6 months (SIWES standard)</option>
+                <option>Flexible / negotiable</option>
+              </select>
+            </div>
+            <div class="form-field">
+              <label class="form-label">Work arrangement <span class="req">*</span></label>
+              <select class="form-input form-select">
+                <option value="">Select…</option>
+                <option>Fully on-site</option>
+                <option>Hybrid (mix)</option>
+                <option>Fully remote</option>
+                <option>Depends on role</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Stipend policy <span class="req">*</span></label>
+            <div class="radio-row">
+              <label class="radio-pill"><input type="radio" name="stipend"> Paid internship (stipend provided)</label>
+              <label class="radio-pill"><input type="radio" name="stipend"> Transport allowance only</label>
+              <label class="radio-pill"><input type="radio" name="stipend"> Unpaid — no financial support</label>
+              <label class="radio-pill"><input type="radio" name="stipend"> Varies by role / negotiable</label>
+            </div>
+            <span class="form-hint">This is displayed on your internship listings. Students filter by stipend policy — accurate information leads to better applicant match quality.</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Do you have a dedicated internship / HR supervisor? <span class="req">*</span></label>
+            <div class="radio-row">
+              <label class="radio-pill"><input type="radio" name="hassup"> Yes — a specific person manages interns</label>
+              <label class="radio-pill"><input type="radio" name="hassup"> No — line managers handle supervision directly</label>
+            </div>
+            <span class="form-hint">After your account is approved, you will be able to create individual supervisor accounts for each person who will be mentoring interns.</span>
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 'company-5',
+      title: 'Documents & verification',
+      badge: 'Step 5 of 6',
+      progress: 83,
+      html: `
+        <div class="login-role-chip" style="background:#ECFDF5;color:#047857">🏢 Company Registration</div>
+        <h2 class="login-h2">Upload your verification documents.</h2>
+        <p class="login-sub">LASU verifies every company before granting platform access. This protects students from fraudulent or unsafe placements. All documents are handled securely and reviewed only by authorised LASU SIWES staff.</p>
+        <div class="form-group">
+
+          <div class="doc-upload-card">
+            <div class="doc-upload-icon">📄</div>
+            <div class="doc-upload-text">
+              <div class="doc-upload-title">Certificate of Incorporation <span class="req">*</span></div>
+              <div class="doc-upload-hint">CAC-issued certificate. PDF or clear image. Max 5MB.</div>
+            </div>
+            <label class="doc-upload-btn">
+              Upload <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none">
+            </label>
+          </div>
+
+          <div class="doc-upload-card">
+            <div class="doc-upload-icon">🪪</div>
+            <div class="doc-upload-text">
+              <div class="doc-upload-title">Government-issued ID of representative <span class="req">*</span></div>
+              <div class="doc-upload-hint">National ID, Voter's Card, Driver's License, or International Passport. Must be valid and not expired.</div>
+            </div>
+            <label class="doc-upload-btn">
+              Upload <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none">
+            </label>
+          </div>
+
+          <div class="doc-upload-card">
+            <div class="doc-upload-icon">🏠</div>
+            <div class="doc-upload-text">
+              <div class="doc-upload-title">Proof of business address <span class="req">*</span></div>
+              <div class="doc-upload-hint">Utility bill, tenancy agreement, or bank statement showing registered company address. Must be dated within the last 6 months.</div>
+            </div>
+            <label class="doc-upload-btn">
+              Upload <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none">
+            </label>
+          </div>
+
+          <div class="doc-upload-card" style="border-style:dashed">
+            <div class="doc-upload-icon">✉️</div>
+            <div class="doc-upload-text">
+              <div class="doc-upload-title">Letter of authority on company letterhead <span class="form-label-opt">(required if generic email domain)</span></div>
+              <div class="doc-upload-hint">Only required if your work email is @gmail.com, @yahoo.com, @outlook.com, etc. Letter must be signed by a director or senior manager and state your authority to register on behalf of the company.</div>
+            </div>
+            <label class="doc-upload-btn" style="opacity:.7">
+              Upload <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none">
+            </label>
+          </div>
+
+          <div class="doc-upload-card" style="border-style:dashed">
+            <div class="doc-upload-icon">🧾</div>
+            <div class="doc-upload-text">
+              <div class="doc-upload-title">Tax Identification Number (TIN) certificate <span class="form-label-opt">(optional)</span></div>
+              <div class="doc-upload-hint">Issued by FIRS. Speeds up verification if your RC number lookup requires manual review.</div>
+            </div>
+            <label class="doc-upload-btn" style="opacity:.7">
+              Upload <input type="file" accept=".pdf,.jpg,.jpeg,.png" style="display:none">
+            </label>
+          </div>
+
+          <div class="callout-info">
+            <span style="font-size:16px">🔍</span>
+            <span>LASU's verification team will cross-check your RC number against the <strong>CAC public database</strong>, confirm your website domain matches your registered email, and may reach out to your company phone number for a brief confirmation call. The typical review time is <strong>24–48 hours on working days</strong>.</span>
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 'company-6',
+      title: 'Agreement & credentials',
+      badge: 'Step 6 of 6',
+      progress: 100,
+      html: `
+        <div class="login-role-chip" style="background:#ECFDF5;color:#047857">🏢 Company Registration</div>
+        <h2 class="login-h2">Almost there — set your credentials.</h2>
+        <p class="login-sub">Create your login credentials and agree to the LASU SIWES partner terms. You'll be able to sign in immediately after submitting, but full dashboard access is granted only after verification is complete.</p>
+        <div class="form-group">
+          <div class="form-field">
+            <label class="form-label">Username <span class="req">*</span></label>
+            <input type="text" class="form-input" placeholder="Choose a username (letters, numbers, underscores)" autocomplete="username">
+            <span class="form-hint">Used alongside your email to sign in. Cannot be changed after account activation.</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Password <span class="req">*</span></label>
+            <input type="password" class="form-input" placeholder="Min. 8 characters" autocomplete="new-password">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Confirm password <span class="req">*</span></label>
+            <input type="password" class="form-input" placeholder="Repeat your password" autocomplete="new-password">
+          </div>
+          <div class="form-divider" style="margin:16px 0 12px"><hr><span>agreements</span><hr></div>
+          <div class="form-check-row">
+            <input type="checkbox" id="compTerms" class="form-check">
+            <label for="compTerms" class="form-check-label">I agree to the <a href="#">LASU SIWES Partner Terms of Service</a> and confirm that all information and documents submitted are accurate and authentic. I understand that providing false information may result in permanent suspension.</label>
+          </div>
+          <div class="form-check-row">
+            <input type="checkbox" id="compInternResp" class="form-check">
+            <label for="compInternResp" class="form-check-label">I confirm that my organisation is legally authorised to employ interns in Nigeria, and that any intern accepted through this platform will be supervised in a safe, professional, and SIWES-compliant working environment.</label>
+          </div>
+          <div class="form-check-row">
+            <input type="checkbox" id="compData" class="form-check">
+            <label for="compData" class="form-check-label">I consent to LASU using the information provided here for verification, matching, and platform administration purposes, in accordance with the <a href="#">LIMDP Data Policy</a>.</label>
+          </div>
+        </div>
+        <div class="reg-next-info" style="--ni:#047857;--nb:#ECFDF5">
+          <div class="reg-next-icon" style="background:#ECFDF5">📬</div>
+          <div>
+            <div class="reg-next-title">What happens after you submit</div>
+            <div class="reg-next-body">1. You'll receive an email confirmation immediately. 2. LASU verifies your CAC number, documents, and company domain (24–48hrs). 3. You receive an activation email. 4. You can then post internships and add supervisor accounts. You will not appear in student searches until verification is complete.</div>
+          </div>
+        </div>
+      `,
+      finalBtn: 'Submit company registration →',
+      finalColor: '#047857',
+      finalShadow: 'rgba(4,120,87,.3)'
+    }
+  ],
+
+  department: [
+    {
+      id: 'dept-1',
+      title: 'Department details',
+      badge: 'Step 1 of 3',
+      progress: 33,
+      html: `
+        <div class="login-role-chip" style="background:#EFF6FF;color:#1D4ED8">🏛️ Department Rep Registration</div>
+        <h2 class="login-h2">Register your department.</h2>
+        <p class="login-sub">You are the primary SIWES coordinator for your department. You'll receive placement alerts and assign lecturers as academic supervisors.</p>
+        <div class="form-group">
+          <div class="form-field">
+            <label class="form-label">Faculty</label>
+            <select class="form-input form-select">
+              <option value="">Select faculty…</option>
+              <option>Computing & Information Technology</option>
+              <option>Engineering</option>
+              <option>Science</option>
+              <option>Management Sciences</option>
+              <option>Environmental Sciences</option>
+              <option>Law</option>
+              <option>Social Sciences</option>
+              <option>Arts & Humanities</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Department</label>
+            <select class="form-input form-select">
+              <option value="">Select department…</option>
+              <option>Computer Science</option>
+              <option>Information Technology</option>
+              <option>Electrical Engineering</option>
+              <option>Mechanical Engineering</option>
+              <option>Accounting</option>
+              <option>Business Administration</option>
+              <option>Mass Communication</option>
+              <option>Biochemistry</option>
+              <option>Chemistry</option>
+              <option>Law</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Department SIWES code <span style="font-weight:400;color:var(--muted)">(from LASU registry)</span></label>
+            <input type="text" class="form-input" placeholder="e.g. FCIT-CS-SIWES">
+            <span class="form-hint">This code is issued by the LASU SIWES central office. Contact the registry if you don't have it.</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Expected number of SIWES students this cycle</label>
+            <select class="form-input form-select">
+              <option value="">Select range…</option>
+              <option>1–20 students</option>
+              <option>21–50 students</option>
+              <option>51–100 students</option>
+              <option>100+ students</option>
+            </select>
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 'dept-2',
+      title: 'Your profile',
+      badge: 'Step 2 of 3',
+      progress: 66,
+      html: `
+        <div class="login-role-chip" style="background:#EFF6FF;color:#1D4ED8">🏛️ Department Rep Registration</div>
+        <h2 class="login-h2">About you — the coordinator.</h2>
+        <p class="login-sub">Your personal profile as the department's SIWES representative. Only verified LASU staff can hold this role.</p>
+        <div class="form-group">
+          <div class="form-row-2">
+            <div class="form-field">
+              <label class="form-label">First name</label>
+              <input type="text" class="form-input" placeholder="e.g. Ngozi" autocomplete="given-name">
+            </div>
+            <div class="form-field">
+              <label class="form-label">Last name</label>
+              <input type="text" class="form-input" placeholder="e.g. Eze" autocomplete="family-name">
+            </div>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Academic title / rank</label>
+            <select class="form-input form-select">
+              <option value="">Select…</option>
+              <option>Professor</option>
+              <option>Associate Professor</option>
+              <option>Senior Lecturer</option>
+              <option>Lecturer I</option>
+              <option>Lecturer II</option>
+              <option>Assistant Lecturer</option>
+              <option>Head of Department (HOD)</option>
+              <option>SIWES Coordinator (non-teaching)</option>
+            </select>
+          </div>
+          <div class="form-field">
+            <label class="form-label">LASU staff email</label>
+            <input type="email" class="form-input" placeholder="e.g. n.eze@lasu.edu.ng" autocomplete="email">
+            <span class="form-hint">Must end in @lasu.edu.ng. Used for placement alerts and approvals.</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Staff ID number</label>
+            <input type="text" class="form-input" placeholder="e.g. LASU/STAFF/2019/001">
+            <span class="form-hint">Required to verify your LASU staff status.</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Phone number</label>
+            <input type="tel" class="form-input" placeholder="+234 800 000 0000" autocomplete="tel">
+          </div>
+        </div>
+      `
+    },
+    {
+      id: 'dept-3',
+      title: 'Set password',
+      badge: 'Step 3 of 3',
+      progress: 100,
+      html: `
+        <div class="login-role-chip" style="background:#EFF6FF;color:#1D4ED8">🏛️ Department Rep Registration</div>
+        <h2 class="login-h2">Create your password.</h2>
+        <p class="login-sub">Set your login credentials for the department rep portal.</p>
+        <div class="form-group">
+          <div class="form-field">
+            <label class="form-label">Username</label>
+            <input type="text" class="form-input" placeholder="Choose a username" autocomplete="username">
+            <span class="form-hint">Tip: use your staff ID or initials + department, e.g. neze_cs</span>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" placeholder="Min. 8 characters" autocomplete="new-password">
+          </div>
+          <div class="form-field">
+            <label class="form-label">Confirm password</label>
+            <input type="password" class="form-input" placeholder="Repeat password" autocomplete="new-password">
+          </div>
+          <div class="form-check-row">
+            <input type="checkbox" id="deptTerms" class="form-check">
+            <label for="deptTerms" class="form-check-label">I confirm I am an authorised LASU staff member and agree to the <a href="#">SIWES coordinator terms</a></label>
+          </div>
+        </div>
+        <div class="reg-next-info" style="--ni:#1D4ED8;--nb:#EFF6FF">
+          <div class="reg-next-icon" style="background:#EFF6FF">📬</div>
+          <div>
+            <div class="reg-next-title">What happens next?</div>
+            <div class="reg-next-body">LASU IT will cross-check your staff ID and email. You'll receive a confirmation within 24 hours. Once active, you'll get alerts when your students secure placements and can assign lecturers as academic supervisors.</div>
+          </div>
+        </div>
+      `,
+      finalBtn: 'Submit department rep registration →',
+      finalColor: '#1D4ED8',
+      finalShadow: 'rgba(29,78,216,.3)'
+    }
+  ]
+
+};
+
+let regRole = null;
+let regStep = 0;
+
+function openRegister(role) {
+  regRole = role;
+  regStep = 0;
+  closeSheet();
+  renderRegStep();
+  document.getElementById('registerScreen').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeRegister() {
+  document.getElementById('registerScreen').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+function renderRegStep() {
+  const steps = REG_STEPS[regRole];
+  const step = steps[regStep];
+  const isLast = regStep === steps.length - 1;
+
+  document.getElementById('regHeaderTitle').textContent = step.title;
+  document.getElementById('regStepBadge').textContent = step.badge;
+  document.getElementById('regProgressBar').style.width = step.progress + '%';
+
+  const backBtn = document.getElementById('regBackBtn');
+  if (regStep === 0) {
+    backBtn.textContent = '←';
+    backBtn.setAttribute('aria-label', 'Back to role selection');
+  } else {
+    backBtn.textContent = '←';
+    backBtn.setAttribute('aria-label', 'Go to previous step');
+  }
+
+  // Determine accent color
+  const colors = { student: '#6D28D9', company: '#047857', department: '#1D4ED8' };
+  const color = colors[regRole];
+  document.getElementById('registerScreen').style.setProperty('--fc', color);
+
+  const body = document.getElementById('regBody');
+  body.innerHTML = step.html + `
+    <button class="form-btn" id="regNextBtn"
+      style="background:${step.finalColor || color};box-shadow:0 4px 16px ${step.finalShadow || 'rgba(0,0,0,.2)'}">
+      ${isLast ? (step.finalBtn || 'Create account →') : 'Continue →'}
+    </button>
+    <p class="login-note" style="margin-top:16px">
+      Already have an account? <a href="#" onclick="closeRegister();openSignIn();return false;">Sign in instead</a>
+    </p>
+  `;
+
+  document.getElementById('regNextBtn').addEventListener('click', regNextStep);
+  setTimeout(() => body.querySelector('input,select')?.focus(), 150);
+}
+
+function regNextStep() {
+  const steps = REG_STEPS[regRole];
+  if (regStep < steps.length - 1) {
+    regStep++;
+    renderRegStep();
+    document.getElementById('regBody').scrollTop = 0;
+  } else {
+    // Final step — submit (placeholder)
+    alert('Registration submitted! (backend integration point)');
+    closeRegister();
+  }
+}
+
+function regGoBack() {
+  if (regStep > 0) {
+    regStep--;
+    renderRegStep();
+  } else {
+    closeRegister();
+    openSheet();
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   KEYBOARD HANDLING
+════════════════════════════════════════════════════════════ */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    if (document.getElementById('registerScreen').classList.contains('open')) {
+      regGoBack();
+    } else if (document.getElementById('signInScreen').classList.contains('open')) {
+      closeSignIn();
+    } else if (document.getElementById('sheetOverlay').classList.contains('open')) {
+      closeSheet();
+    }
+  }
+});
+
+/* ════════════════════════════════════════════════════════════
+   SCROLL REVEAL
+════════════════════════════════════════════════════════════ */
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(en => {
+    if (en.isIntersecting) {
+      en.target.classList.add('in');
+      observer.unobserve(en.target);
+    }
+  });
+}, { threshold: 0.12 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

@@ -1,0 +1,2155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+/* ═══════════════════════════════════════════════════════
+   RESET & ROOT
+═══════════════════════════════════════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #0A0A0A;
+  --off-black: #1A1A1A;
+  --dark: #2C2C2C;
+  --mid: #6B6B6B;
+  --soft: #9A9A9A;
+  --border: #E4E4E4;
+  --border-light: #F0F0F0;
+  --bg: #FAFAFA;
+  --white: #FFFFFF;
+  --highlight: #F5F5F5;
+  --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --radius-sm: 6px;
+  --radius: 10px;
+  --radius-lg: 14px;
+  --progress-h: 2px;
+
+  /* Fluid spacing scale */
+  --space-xs:  0.375rem;  /* 6px  */
+  --space-sm:  0.625rem;  /* 10px */
+  --space-md:  1rem;      /* 16px */
+  --space-lg:  1.5rem;    /* 24px */
+  --space-xl:  2rem;      /* 32px */
+  --space-2xl: 2.5rem;    /* 40px */
+}
+
+html {
+  /* Prevent font-size inflation on iOS */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  background: transparent;
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* prevent horizontal scroll on mobile */
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════════════════════
+   WIZARD SHELL
+   Mobile-first: full-width with padding, grows on larger screens
+═══════════════════════════════════════════════════════ */
+.wizard {
+  width: 100%;
+  max-width: 720px;
+  margin: 0 auto;
+  /* safe padding: left/right so content never touches edge on phones */
+  padding: 0 1rem 3rem;
+}
+
+/* Tablet+ */
+@media (min-width: 560px) {
+  .wizard { padding: 0 1.5rem 3rem; }
+}
+
+/* Desktop */
+@media (min-width: 900px) {
+  .wizard { padding: 0 0 3rem; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   HEADER
+═══════════════════════════════════════════════════════ */
+.wizard-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0 0.875rem;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 1.5rem;
+  gap: 8px;
+}
+
+@media (min-width: 560px) {
+  .wizard-header {
+    padding: 1.25rem 0 1rem;
+    margin-bottom: 1.75rem;
+  }
+}
+
+.wizard-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0; /* allow flex truncation */
+}
+
+.logo-mark {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  background: var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.logo-mark svg { width: 15px; height: 15px; }
+
+@media (min-width: 560px) {
+  .logo-mark { width: 30px; height: 30px; }
+  .logo-mark svg { width: 16px; height: 16px; }
+}
+
+.logo-text {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--black);
+  line-height: 1.2;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@media (min-width: 400px) { .logo-text { font-size: 13px; } }
+
+.logo-sub {
+  font-size: 10.5px;
+  color: var(--soft);
+  font-weight: 400;
+  display: block;
+}
+
+@media (min-width: 400px) { .logo-sub { font-size: 11px; } }
+
+.step-counter {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--soft);
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (min-width: 400px) { .step-counter { font-size: 11.5px; } }
+
+/* ═══════════════════════════════════════════════════════
+   PROGRESS BAR
+═══════════════════════════════════════════════════════ */
+.progress-bar-wrap {
+  height: var(--progress-h);
+  background: var(--border-light);
+  border-radius: 1px;
+  margin-bottom: 1.75rem;
+  overflow: hidden;
+}
+
+@media (min-width: 560px) {
+  .progress-bar-wrap { margin-bottom: 2.25rem; }
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--black);
+  border-radius: 1px;
+  transition: width 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ═══════════════════════════════════════════════════════
+   STEP VISIBILITY
+═══════════════════════════════════════════════════════ */
+.step { display: none; }
+.step.active {
+  display: block;
+  animation: stepIn 0.22s ease both;
+}
+
+@keyframes stepIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════════════════════
+   STEP HEADER TYPOGRAPHY
+   Fluid scaling: small → medium → large
+═══════════════════════════════════════════════════════ */
+.step-eyebrow {
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--soft);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.4rem;
+}
+
+@media (min-width: 400px) { .step-eyebrow { font-size: 10.5px; } }
+
+.step-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 0.45rem;
+  line-height: 1.25;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 400px) { .step-title { font-size: 20px; } }
+@media (min-width: 768px) { .step-title { font-size: 22px; } }
+
+.step-subtitle {
+  font-size: 13px;
+  color: var(--mid);
+  margin-bottom: 1.5rem;
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+@media (min-width: 400px) {
+  .step-subtitle { font-size: 13.5px; margin-bottom: 1.75rem; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════════════════════════ */
+.form-group { margin-bottom: 1rem; }
+
+@media (min-width: 560px) { .form-group { margin-bottom: 1.1rem; } }
+
+.form-label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 5px;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 400px) {
+  .form-label { font-size: 12.5px; margin-bottom: 6px; }
+}
+
+.helper-text {
+  font-size: 11px;
+  color: var(--soft);
+  margin-top: 5px;
+  line-height: 1.55;
+}
+
+@media (min-width: 400px) { .helper-text { font-size: 11.5px; } }
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--black);
+  font-size: 14px; /* ≥16px on mobile prevents iOS zoom, but 14px with viewport set is fine */
+  font-family: var(--font);
+  font-weight: 400;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  outline: none;
+}
+
+/* Prevent iOS zoom: keep font-size at 16px on tiny screens */
+@media (max-width: 374px) {
+  .form-input, .form-select, .form-textarea { font-size: 16px; }
+}
+
+.form-input,
+.form-select {
+  height: 42px;   /* taller tap target on mobile */
+  padding: 0 11px;
+}
+
+@media (min-width: 560px) {
+  .form-input, .form-select { height: 38px; font-size: 13.5px; }
+}
+
+.form-select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%236B6B6B' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 32px;
+}
+
+.form-textarea {
+  padding: 10px 11px;
+  resize: vertical;
+  min-height: 88px;
+  line-height: 1.6;
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder { color: #C0C0C0; }
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: var(--black);
+  box-shadow: 0 0 0 2.5px rgba(10,10,10,0.08);
+}
+
+/* Two-column grid: stacks on small phones, 2 cols on 400px+ */
+.two-col {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
+@media (min-width: 400px) {
+  .two-col { grid-template-columns: 1fr 1fr; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   PILLS
+═══════════════════════════════════════════════════════ */
+.pill-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.pill {
+  padding: 6px 13px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--mid);
+  font-size: 12.5px;
+  font-family: var(--font);
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+  /* Larger tap target */
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+}
+
+@media (min-width: 560px) {
+  .pill { padding: 5px 13px; min-height: auto; }
+}
+
+.pill:hover  { border-color: var(--dark); color: var(--black); }
+.pill.selected { background: var(--black); border-color: var(--black); color: var(--white); }
+
+/* ═══════════════════════════════════════════════════════
+   FAMILY GRID (career cards)
+═══════════════════════════════════════════════════════ */
+.family-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+@media (min-width: 380px) {
+  .family-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (min-width: 768px) {
+  .family-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+}
+
+.family-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 13px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--white);
+  /* generous tap target */
+  min-height: 56px;
+}
+
+@media (min-width: 560px) {
+  .family-option { padding: 11px 13px; min-height: auto; }
+}
+
+.family-option:hover { border-color: var(--dark); background: var(--bg); }
+.family-option.selected { background: var(--black); border-color: var(--black); }
+.family-option.selected .family-text,
+.family-option.selected .family-sub { color: var(--white); }
+
+.family-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 560px) {
+  .family-icon { width: 30px; height: 30px; font-size: 15px; }
+}
+
+.family-option.selected .family-icon { background: rgba(255,255,255,0.12); }
+
+.family-text {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--black);
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.family-sub {
+  font-size: 11px;
+  color: var(--soft);
+  font-weight: 400;
+}
+
+/* ═══════════════════════════════════════════════════════
+   SUBROLE OPTIONS
+═══════════════════════════════════════════════════════ */
+.subrole-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+@media (min-width: 560px) { .subrole-grid { gap: 5px; } }
+
+.subrole-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--white);
+  min-height: 52px;
+}
+
+@media (min-width: 560px) {
+  .subrole-option { padding: 10px 12px; min-height: auto; }
+}
+
+.subrole-option:hover { border-color: var(--dark); background: var(--bg); }
+.subrole-option.selected { border-color: var(--black); background: var(--black); }
+.subrole-option.selected .subrole-name,
+.subrole-option.selected .subrole-hint { color: var(--white); }
+
+.subrole-radio {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border);
+  flex-shrink: 0;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (min-width: 560px) {
+  .subrole-radio { width: 15px; height: 15px; }
+}
+
+.subrole-option.selected .subrole-radio { background: white; border-color: white; }
+
+.subrole-radio-inner {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--black);
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+@media (min-width: 560px) {
+  .subrole-radio-inner { width: 5px; height: 5px; }
+}
+
+.subrole-option.selected .subrole-radio-inner { opacity: 1; }
+
+.subrole-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--black);
+  letter-spacing: -0.01em;
+}
+
+.subrole-hint {
+  font-size: 11.5px;
+  color: var(--soft);
+  margin-top: 1px;
+}
+
+@media (min-width: 560px) { .subrole-hint { font-size: 11px; } }
+
+/* ═══════════════════════════════════════════════════════
+   COMPETENCY OPTIONS (goals)
+═══════════════════════════════════════════════════════ */
+.competency-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin-top: 6px;
+}
+
+@media (min-width: 560px) { .competency-grid { gap: 6px; } }
+
+.competency-option {
+  display: flex;
+  align-items: flex-start;
+  gap: 11px;
+  padding: 13px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--white);
+}
+
+@media (min-width: 560px) {
+  .competency-option { padding: 12px 14px; }
+}
+
+.competency-option:hover { border-color: var(--dark); background: var(--bg); }
+.competency-option.selected { background: var(--black); border-color: var(--black); }
+.competency-option.selected .comp-label,
+.competency-option.selected .comp-desc,
+.competency-option.selected .comp-level {
+  color: var(--white) !important;
+  border-color: rgba(255,255,255,0.2) !important;
+}
+
+.comp-level {
+  min-width: 27px;
+  height: 27px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--mid);
+  flex-shrink: 0;
+  transition: all 0.15s;
+}
+
+@media (min-width: 560px) {
+  .comp-level { min-width: 26px; height: 26px; font-size: 11.5px; }
+}
+
+.comp-text { flex: 1; min-width: 0; }
+
+.comp-label {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 3px;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 560px) {
+  .comp-label { font-size: 13px; margin-bottom: 2px; }
+}
+
+.comp-desc {
+  font-size: 12px;
+  color: var(--soft);
+  line-height: 1.5;
+}
+
+@media (min-width: 560px) { .comp-desc { font-size: 11.5px; } }
+
+/* ═══════════════════════════════════════════════════════
+   SKILL CARDS
+═══════════════════════════════════════════════════════ */
+.skill-card {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 14px 15px;
+  margin-bottom: 8px;
+  background: var(--white);
+  transition: border-color 0.15s;
+}
+
+@media (min-width: 560px) {
+  .skill-card { padding: 13px 15px; }
+}
+
+.skill-card:hover { border-color: var(--border); }
+
+.skill-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+  gap: 8px;
+}
+
+@media (min-width: 560px) { .skill-card-header { margin-bottom: 11px; } }
+
+.skill-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--black);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.skill-badge {
+  font-size: 10.5px;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--mid);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+/* Skill level bar dots */
+.level-dots {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+
+@media (min-width: 560px) { .level-dots { gap: 5px; } }
+
+.level-dot {
+  flex: 1;
+  height: 7px;
+  border-radius: 4px;
+  background: var(--border-light);
+  cursor: pointer;
+  transition: background 0.12s;
+  /* taller on mobile for easier tap */
+}
+
+@media (min-width: 560px) { .level-dot { height: 6px; border-radius: 3px; } }
+
+.level-dot.filled { background: var(--black); }
+.level-dot.hover-fill { background: #888; }
+
+.level-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 10px;
+  color: var(--soft);
+  margin-top: 5px;
+  font-weight: 500;
+}
+
+/* Hide middle labels on very small screens */
+@media (max-width: 360px) {
+  .level-labels span:nth-child(2),
+  .level-labels span:nth-child(3),
+  .level-labels span:nth-child(4) {
+    display: none;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   CHECKMARK ROWS
+═══════════════════════════════════════════════════════ */
+.checkmark-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  padding: 3px 0;
+  /* larger touch area */
+  min-height: 30px;
+}
+
+@media (min-width: 560px) {
+  .checkmark-row { gap: 9px; margin-bottom: 7px; padding: 2px 0; min-height: auto; }
+}
+
+.custom-check {
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid var(--border);
+  background: var(--white);
+  flex-shrink: 0;
+  transition: all 0.12s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 1px;
+}
+
+@media (min-width: 560px) {
+  .custom-check { width: 16px; height: 16px; margin-top: 1.5px; }
+}
+
+.custom-check::after {
+  content: '';
+  display: block;
+  width: 5px;
+  height: 8px;
+  border: 1.5px solid white;
+  border-top: none;
+  border-left: none;
+  transform: rotate(45deg) translate(-0.5px, -1px);
+  opacity: 0;
+  transition: opacity 0.1s;
+}
+
+@media (min-width: 560px) {
+  .custom-check::after { width: 4px; height: 7px; }
+}
+
+.custom-check.checked { background: var(--black); border-color: var(--black); }
+.custom-check.checked::after { opacity: 1; }
+
+.check-label {
+  font-size: 13.5px;
+  color: var(--off-black);
+  line-height: 1.5;
+  cursor: pointer;
+  font-weight: 400;
+}
+
+@media (min-width: 560px) { .check-label { font-size: 13px; } }
+
+/* ═══════════════════════════════════════════════════════
+   UPLOAD ZONE
+═══════════════════════════════════════════════════════ */
+.upload-zone {
+  border: 1.5px dashed var(--border);
+  border-radius: var(--radius);
+  padding: 28px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.15s;
+  background: var(--bg);
+}
+
+@media (min-width: 560px) {
+  .upload-zone { padding: 24px; }
+}
+
+.upload-zone:hover { border-color: var(--black); background: var(--highlight); }
+.upload-icon { font-size: 20px; margin-bottom: 8px; opacity: 0.7; }
+
+@media (min-width: 560px) { .upload-icon { font-size: 18px; margin-bottom: 7px; } }
+
+.upload-text {
+  font-size: 13px;
+  color: var(--mid);
+  line-height: 1.65;
+}
+
+@media (min-width: 560px) { .upload-text { font-size: 12.5px; line-height: 1.6; } }
+
+.upload-text strong { color: var(--black); font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════
+   CALLOUT BLOCKS
+═══════════════════════════════════════════════════════ */
+.info-callout {
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-left: 2.5px solid var(--black);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 12px 14px;
+  font-size: 12.5px;
+  color: var(--mid);
+  line-height: 1.65;
+  margin-bottom: 1.25rem;
+}
+
+.info-callout strong { color: var(--black); font-weight: 600; }
+
+.amber-callout {
+  background: #FAFAF6;
+  border: 1px solid #E8E4D0;
+  border-left: 2.5px solid #9A8C60;
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 12px 14px;
+  font-size: 12.5px;
+  color: #6B5E30;
+  line-height: 1.65;
+  margin-bottom: 1.25rem;
+}
+
+.amber-callout strong { font-weight: 600; }
+
+/* ═══════════════════════════════════════════════════════
+   TABS
+═══════════════════════════════════════════════════════ */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  border-bottom: 1px solid var(--border-light);
+  margin-bottom: 1.15rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.tab-bar::-webkit-scrollbar { display: none; }
+
+.tab {
+  padding: 8px 14px;
+  font-size: 12.5px;
+  font-family: var(--font);
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: var(--soft);
+  background: transparent;
+  transition: all 0.15s;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+@media (min-width: 560px) { .tab { padding: 7px 16px; } }
+
+.tab:hover { color: var(--black); }
+.tab.active { color: var(--black); border-bottom-color: var(--black); font-weight: 600; }
+
+.dynamic-panel { display: none; }
+.dynamic-panel.active { display: block; }
+
+/* ═══════════════════════════════════════════════════════
+   SECTION DIVIDER
+═══════════════════════════════════════════════════════ */
+.section-divider {
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--soft);
+  margin: 1.4rem 0 0.8rem;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+@media (min-width: 400px) { .section-divider { font-size: 10.5px; } }
+
+/* ═══════════════════════════════════════════════════════
+   SCORE PREVIEW  (Step 8)
+═══════════════════════════════════════════════════════ */
+.score-preview {
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  padding: 16px;
+  margin-top: 1.5rem;
+}
+
+.score-preview-title {
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 14px;
+  letter-spacing: -0.01em;
+}
+
+.score-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 9px;
+  gap: 8px;
+}
+
+.score-label {
+  font-size: 12px;
+  color: var(--mid);
+  min-width: 0;
+  width: 120px;
+  flex-shrink: 0;
+}
+
+@media (min-width: 400px) { .score-label { width: 130px; } }
+
+.score-bar-wrap {
+  flex: 1;
+  margin: 0 8px;
+  height: 4px;
+  background: var(--border);
+  border-radius: 2px;
+  overflow: hidden;
+  min-width: 40px;
+}
+
+@media (min-width: 400px) { .score-bar-wrap { margin: 0 12px; } }
+
+.score-bar-val {
+  height: 100%;
+  border-radius: 2px;
+  background: var(--black);
+}
+
+.score-num {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--black);
+  min-width: 26px;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.score-footer {
+  border-top: 1px solid var(--border-light);
+  margin-top: 12px;
+  padding-top: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.score-footer-label { font-size: 12px; color: var(--mid); }
+
+.tier-badge {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--black);
+  background: var(--border-light);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 999px;
+}
+
+/* ═══════════════════════════════════════════════════════
+   VERIFICATION TIMELINE
+═══════════════════════════════════════════════════════ */
+.verification-timeline {
+  display: flex;
+  flex-direction: column;
+  margin: 1rem 0;
+}
+
+.vt-item {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+@media (min-width: 560px) { .vt-item { gap: 13px; } }
+
+.vt-line-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.vt-dot {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.vt-dot.now { background: var(--black); color: white; border: 1.5px solid var(--black); }
+.vt-dot.later { background: var(--white); color: var(--soft); border: 1px solid var(--border); }
+
+.vt-connector {
+  width: 1px;
+  background: var(--border-light);
+  flex: 1;
+  min-height: 20px;
+}
+
+.vt-content { padding-bottom: 18px; }
+
+.vt-tag {
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 999px;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.tag-now { background: var(--black); color: white; }
+.tag-later { background: var(--bg); color: var(--soft); border: 1px solid var(--border); }
+
+.vt-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--black);
+  margin-bottom: 3px;
+  letter-spacing: -0.01em;
+}
+
+.vt-desc {
+  font-size: 11.5px;
+  color: var(--mid);
+  line-height: 1.55;
+}
+
+/* ═══════════════════════════════════════════════════════
+   TIER GRID
+═══════════════════════════════════════════════════════ */
+.tier-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin: 1rem 0;
+}
+
+@media (min-width: 400px) {
+  .tier-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.tier-card {
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 13px;
+  text-align: center;
+  background: var(--white);
+}
+
+@media (min-width: 400px) { .tier-card { padding: 12px; } }
+
+.tier-card.t2 { border-color: var(--border); background: var(--bg); }
+
+.tier-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 5px;
+  color: var(--black);
+}
+
+.tier-desc {
+  font-size: 11px;
+  color: var(--mid);
+  line-height: 1.45;
+}
+
+/* ═══════════════════════════════════════════════════════
+   NAV ROW
+═══════════════════════════════════════════════════════ */
+.nav-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 2rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--border-light);
+  gap: 12px;
+}
+
+.save-note {
+  font-size: 11px;
+  color: var(--soft);
+  font-weight: 400;
+}
+
+@media (min-width: 400px) { .save-note { font-size: 11.5px; } }
+
+/* ═══════════════════════════════════════════════════════
+   BUTTONS
+   Full-width on mobile, auto on desktop
+═══════════════════════════════════════════════════════ */
+.btn {
+  padding: 0 20px;
+  height: 42px;          /* tap-friendly */
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  font-family: var(--font);
+  cursor: pointer;
+  transition: all 0.15s;
+  border: 1px solid var(--border);
+  letter-spacing: -0.01em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  white-space: nowrap;
+}
+
+@media (min-width: 560px) {
+  .btn { height: 37px; padding: 0 18px; font-size: 13.5px; }
+}
+
+.btn-ghost {
+  background: var(--white);
+  color: var(--mid);
+  border-color: var(--border);
+}
+
+.btn-ghost:hover { background: var(--bg); color: var(--black); border-color: var(--dark); }
+
+.btn-primary {
+  background: var(--black);
+  color: white;
+  border-color: var(--black);
+}
+
+.btn-primary:hover { background: var(--dark); border-color: var(--dark); }
+
+/* Active / press state for touch */
+.btn:active { opacity: 0.75; transform: scale(0.99); }
+
+/* ═══════════════════════════════════════════════════════
+   SUCCESS SCREEN
+═══════════════════════════════════════════════════════ */
+.success-screen {
+  text-align: center;
+  padding: 1.5rem 0 2rem;
+}
+
+@media (min-width: 560px) {
+  .success-screen { padding: 2rem 0; }
+}
+
+.success-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.25rem;
+}
+
+.success-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 400px) { .success-title { font-size: 20px; } }
+@media (min-width: 768px) { .success-title { font-size: 22px; } }
+
+.success-subtitle {
+  font-size: 13.5px;
+  color: var(--mid);
+  line-height: 1.65;
+  max-width: 460px;
+  margin: 0 auto 1.5rem;
+}
+
+/* Next-steps cards: stack on mobile, 3 cols on tablet+ */
+.next-steps {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 8px;
+  margin-top: 1.5rem;
+  text-align: left;
+}
+
+@media (min-width: 480px) {
+  .next-steps { grid-template-columns: repeat(3, 1fr); }
+}
+
+.ns-card {
+  background: var(--bg);
+  border: 1px solid var(--border-light);
+  border-radius: var(--radius);
+  padding: 13px;
+}
+
+.ns-step {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--soft);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 5px;
+}
+
+.ns-title {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--black);
+  margin-bottom: 4px;
+  letter-spacing: -0.01em;
+}
+
+.ns-desc {
+  font-size: 11.5px;
+  color: var(--mid);
+  line-height: 1.45;
+}
+
+/* ═══════════════════════════════════════════════════════
+   LARGE SCREEN ENHANCEMENTS  (≥1024px)
+   Give more breathing room and slightly larger elements
+═══════════════════════════════════════════════════════ */
+@media (min-width: 1024px) {
+  .wizard {
+    max-width: 760px;
+  }
+
+  .step-title { font-size: 24px; }
+
+  .step-subtitle { font-size: 14px; }
+
+  .family-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+  .family-option { padding: 13px 15px; }
+
+  .form-input, .form-select { height: 38px; }
+
+  .btn { height: 38px; }
+
+  .score-preview { padding: 20px; }
+
+  .score-label { width: 150px; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   VERY LARGE SCREENS  (≥1280px)
+═══════════════════════════════════════════════════════ */
+@media (min-width: 1280px) {
+  .wizard { max-width: 780px; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   TOUCH / HOVER DISAMBIGUATION
+   Remove hover effects on touch-primary devices
+═══════════════════════════════════════════════════════ */
+@media (hover: none) {
+  .family-option:hover,
+  .subrole-option:hover,
+  .competency-option:hover,
+  .pill:hover,
+  .btn-ghost:hover,
+  .btn-primary:hover,
+  .upload-zone:hover,
+  .skill-card:hover { /* reset to default on touch */ }
+}
+
+/* ═══════════════════════════════════════════════════════
+   ACCESSIBILITY: reduced motion
+═══════════════════════════════════════════════════════ */
+@media (prefers-reduced-motion: reduce) {
+  .step.active { animation: none; }
+  .progress-bar-fill { transition: none; }
+  .btn, .pill, .family-option, .subrole-option,
+  .competency-option, .custom-check, .level-dot { transition: none; }
+}
+
+/* ═══════════════════════════════════════════════════════
+   UTILITY: screen-reader only
+═══════════════════════════════════════════════════════ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+  border: 0;
+}
+</style>
+
+</head>
+<body>
+    
+
+<div class="wizard">
+
+  <!-- ── HEADER ── -->
+  <div class="wizard-header">
+    <div class="wizard-logo">
+      <div class="logo-mark">
+        <svg viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="9" cy="9" r="7" stroke="white" stroke-width="1.5"/>
+          <path d="M6 9l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <div class="logo-text">LASU InternConnect</div>
+        <div class="logo-sub">Lagos State University</div>
+      </div>
+    </div>
+    <div class="step-counter" id="step-counter">Step 1 of 8</div>
+  </div>
+
+  <!-- ── PROGRESS ── -->
+  <div class="progress-bar-wrap">
+    <div class="progress-bar-fill" id="progress-bar" style="width:12.5%"></div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 1: Welcome & Profile Basics
+  ══════════════════════════════════════════════════ -->
+  <div class="step active" id="step-1">
+    <div class="step-eyebrow">Getting started</div>
+    <div class="step-title">Welcome to your career journey 🎓</div>
+    <div class="step-subtitle">This takes about 10–14 minutes. Everything you share helps us find the internship that actually fits you — not just a random placement. There are no wrong answers here.</div>
+
+    <div class="info-callout">
+      <strong>You're in control.</strong> You can save and return any time. Nothing is submitted until you hit "Submit Profile" on the last step.
+    </div>
+
+    <div class="two-col">
+      <div class="form-group">
+        <label class="form-label">First name</label>
+        <input type="text" class="form-input" placeholder="e.g. Adaeze" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Last name</label>
+        <input type="text" class="form-input" placeholder="e.g. Okonkwo" />
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="form-group">
+        <label class="form-label">Matric number</label>
+        <input type="text" class="form-input" placeholder="e.g. 190402001" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Faculty</label>
+        <select class="form-select">
+          <option value="">Select your faculty</option>
+          <option>Faculty of Engineering</option>
+          <option>Faculty of Science</option>
+          <option>Faculty of Social Sciences</option>
+          <option>Faculty of Management Sciences</option>
+          <option>Faculty of Agriculture</option>
+          <option>Faculty of Arts</option>
+          <option>Faculty of Education</option>
+          <option>Faculty of Law</option>
+          <option>College of Medicine</option>
+        </select>
+      </div>
+    </div>
+    <div class="two-col">
+      <div class="form-group">
+        <label class="form-label">Department</label>
+        <input type="text" class="form-input" placeholder="e.g. Computer Science" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Current level</label>
+        <select class="form-select">
+          <option value="">Select level</option>
+          <option>100 Level</option>
+          <option>200 Level</option>
+          <option>300 Level</option>
+          <option>400 Level</option>
+          <option>500 Level</option>
+          <option>Postgraduate</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">CGPA (if known — optional)</label>
+      <select class="form-select">
+        <option value="">Prefer not to say / not yet calculated</option>
+        <option>4.50 – 5.00 (First Class)</option>
+        <option>3.50 – 4.49 (Second Class Upper)</option>
+        <option>2.40 – 3.49 (Second Class Lower)</option>
+        <option>1.50 – 2.39 (Third Class)</option>
+        <option>Below 1.50</option>
+      </select>
+      <div class="helper-text">This is optional. Your CGPA is only one small part of your fit score — skills and goals matter more.</div>
+    </div>
+
+    <div class="nav-row">
+      <div class="save-note">Your progress saves automatically</div>
+      <button class="btn btn-primary" onclick="goStep(2)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 2: Job Family
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-2">
+    <div class="step-eyebrow">Step 2 of 8 — Career direction</div>
+    <div class="step-title">What kind of work excites you most?</div>
+    <div class="step-subtitle">Choose the field that feels most like you — even if you've never worked in it. You can always update this later. This unlocks your personalised path.</div>
+
+    <div class="form-group">
+      <div class="family-grid" id="family-grid">
+        <div class="family-option" onclick="selectFamily(this, 'tech')">
+          <div class="family-icon">💻</div>
+          <div>
+            <div class="family-text">Technology, Data & IT</div>
+            <div class="family-sub">Software, data, cybersecurity, AI</div>
+          </div>
+        </div>
+        <div class="family-option" onclick="selectFamily(this, 'agri')">
+          <div class="family-icon">🌾</div>
+          <div>
+            <div class="family-text">Agriculture & Food Systems</div>
+            <div class="family-sub">Farming, agribusiness, food science</div>
+          </div>
+        </div>
+        <div class="family-option" onclick="selectFamily(this, 'health')">
+          <div class="family-icon">🏥</div>
+          <div>
+            <div class="family-text">Health & Life Sciences</div>
+            <div class="family-sub">Medicine, pharmacy, public health</div>
+          </div>
+        </div>
+        <div class="family-option" onclick="selectFamily(this, 'eng')">
+          <div class="family-icon">⚙️</div>
+          <div>
+            <div class="family-text">Engineering & Manufacturing</div>
+            <div class="family-sub">Civil, mechanical, production</div>
+          </div>
+        </div>
+        <div class="family-option" onclick="selectFamily(this, 'biz')">
+          <div class="family-icon">📊</div>
+          <div>
+            <div class="family-text">Business & Finance</div>
+            <div class="family-sub">Accounting, marketing, management</div>
+          </div>
+        </div>
+        <div class="family-option" onclick="selectFamily(this, 'creative')">
+          <div class="family-icon">🎨</div>
+          <div>
+            <div class="family-text">Creative Media & Design</div>
+            <div class="family-sub">Graphics, content, film, UX</div>
+          </div>
+        </div>
+        <div class="family-option" onclick="selectFamily(this, 'sci')">
+          <div class="family-icon">🔬</div>
+          <div>
+            <div class="family-text">Science & Environment</div>
+            <div class="family-sub">Chemistry, ecology, research</div>
+          </div>
+        </div>
+        <div class="family-option" onclick="selectFamily(this, 'law')">
+          <div class="family-icon">⚖️</div>
+          <div>
+            <div class="family-text">Law, Policy & Social Sciences</div>
+            <div class="family-sub">Legal, governance, sociology</div>
+          </div>
+        </div>
+        <div class="family-option" onclick="selectFamily(this, 'edu')">
+          <div class="family-icon">📚</div>
+          <div>
+            <div class="family-text">Education & Library Sciences</div>
+            <div class="family-sub">Teaching, curriculum, research</div>
+          </div>
+        </div>
+        <div class="family-option" onclick="selectFamily(this, 'energy')">
+          <div class="family-icon">⚡</div>
+          <div>
+            <div class="family-text">Energy & Geosciences</div>
+            <div class="family-sub">Oil & gas, renewables, geology</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goStep(1)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(3)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 3: Sub-role
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-3">
+    <div class="step-eyebrow">Step 3 of 8 — Your specialisation</div>
+    <div class="step-title" id="step3-title">What's your specific interest?</div>
+    <div class="step-subtitle" id="step3-sub">These are the roles available within your chosen field. Pick the one that fits best — or the one you're most curious about.</div>
+
+    <div class="tab-bar">
+      <button class="tab active" onclick="switchFamilyTab(this, 'tech-panel')">Technology</button>
+      <button class="tab" onclick="switchFamilyTab(this, 'agri-panel')">Agriculture</button>
+      <button class="tab" onclick="switchFamilyTab(this, 'health-panel')">Health</button>
+    </div>
+
+    <div class="dynamic-panel active" id="tech-panel">
+      <div class="subrole-grid">
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Software Development</div><div class="subrole-hint">Web, mobile, backend — building software products</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Data Science & Analytics</div><div class="subrole-hint">Working with data, statistics, insights, visualisation</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Cybersecurity</div><div class="subrole-hint">Network security, ethical hacking, risk management</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">IT Support & Systems Admin</div><div class="subrole-hint">Maintaining infrastructure, troubleshooting, networks</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">AI & Machine Learning</div><div class="subrole-hint">Model development, NLP, computer vision</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Product Management</div><div class="subrole-hint">Bridging tech and business — roadmaps, users, strategy</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">UX/UI Design (Tech)</div><div class="subrole-hint">Designing digital experiences and interfaces</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Cloud & DevOps</div><div class="subrole-hint">AWS, deployment pipelines, infrastructure automation</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dynamic-panel" id="agri-panel">
+      <div class="subrole-grid">
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Crop Production & Agronomy</div><div class="subrole-hint">Crop management, soil science, field operations</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Agribusiness & Farm Management</div><div class="subrole-hint">Business side of farming — planning, logistics, markets</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Food Science & Technology</div><div class="subrole-hint">Food processing, quality control, packaging</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Animal Production & Veterinary</div><div class="subrole-hint">Livestock, animal health, husbandry</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Agricultural Extension & Policy</div><div class="subrole-hint">Community outreach, farmer education, government</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="dynamic-panel" id="health-panel">
+      <div class="subrole-grid">
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Clinical Medicine & Surgery</div><div class="subrole-hint">Hospital-based clinical practice and patient care</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Pharmacy & Pharmacology</div><div class="subrole-hint">Drug dispensing, pharmacokinetics, clinical pharmacy</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Public Health & Epidemiology</div><div class="subrole-hint">Community health, disease surveillance, health policy</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Medical Laboratory Science</div><div class="subrole-hint">Diagnostics, pathology, lab procedures</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Nursing & Allied Health</div><div class="subrole-hint">Patient care, clinical procedures, health education</div></div>
+        </div>
+        <div class="subrole-option" onclick="selectSubrole(this)">
+          <div class="subrole-radio"><div class="subrole-radio-inner"></div></div>
+          <div><div class="subrole-name">Health Informatics & Digital Health</div><div class="subrole-hint">Health data systems, EHRs, digital tools</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goStep(2)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(4)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 4: Academic Background
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-4">
+    <div class="step-eyebrow">Step 4 of 8 — Academic background</div>
+    <div class="step-title">Tell us about your coursework</div>
+    <div class="step-subtitle">Courses you've taken are strong signals of what you can do. Don't worry if you haven't taken many yet — just be honest about where you are.</div>
+
+    <div class="amber-callout">
+      <strong>Tip:</strong> Even courses you found difficult count. They show you've been exposed to those topics — and learning from struggle is real experience.
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Which relevant courses have you completed? (tick all that apply)</label>
+      <div class="helper-text" style="margin-bottom: 10px;">These are the most common relevant courses for your selected field. Add your own below if needed.</div>
+
+      <div class="tab-bar" style="margin-bottom: 1rem;">
+        <button class="tab active" onclick="switchCourseTab(this, 'courses-tech')">Technology courses</button>
+        <button class="tab" onclick="switchCourseTab(this, 'courses-agri')">Agriculture courses</button>
+        <button class="tab" onclick="switchCourseTab(this, 'courses-health')">Health courses</button>
+      </div>
+
+      <div class="dynamic-panel active" id="courses-tech">
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Introduction to Programming / Computer Science 101</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Data Structures and Algorithms</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Database Management Systems</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Computer Networks and Communication</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Software Engineering / System Analysis</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Statistics or Probability for Computing</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Web Development / Internet Programming</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Operating Systems</span></div>
+      </div>
+
+      <div class="dynamic-panel" id="courses-agri">
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Principles of Crop Production</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Soil Science and Fertility</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Agricultural Economics</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Animal Nutrition and Husbandry</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Food Processing and Preservation</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Extension and Rural Development</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Agribusiness Management</span></div>
+      </div>
+
+      <div class="dynamic-panel" id="courses-health">
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Human Anatomy and Physiology</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Biochemistry</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Pharmacology</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Epidemiology and Biostatistics</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Pathology</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Community Health and Primary Care</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Medical Ethics and Communication</span></div>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top: 1rem;">
+      <label class="form-label">Any other relevant course not listed? (optional)</label>
+      <input type="text" class="form-input" placeholder="e.g. GIS and Remote Sensing, Entrepreneurship 101..." />
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Best performing area in school (optional)</label>
+      <input type="text" class="form-input" placeholder="e.g. I always do well in lab practicals / I enjoy mathematical courses" />
+      <div class="helper-text">This helps us spot your hidden strengths even when grades don't show everything.</div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goStep(3)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(5)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 5: Skills Self-Assessment
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-5">
+    <div class="step-eyebrow">Step 5 of 8 — Your skills</div>
+    <div class="step-title">Rate your skills honestly</div>
+    <div class="step-subtitle">Use the 5-dot scale to show where you are <em>today</em>. Starting at Level 1 is completely normal — this is how we find the right starting point for you.</div>
+
+    <div class="info-callout">
+      <strong>No guessing needed.</strong> Your self-ratings are the starting point. After you complete your profile, the system will run short diagnostic tasks to confirm and refine these ratings. Being honest now gives you better matches.
+    </div>
+
+    <div class="section-divider">Technical skills (field-specific)</div>
+
+    <div class="dynamic-skills-section">
+      <div class="skill-card">
+        <div class="skill-card-header">
+          <span class="skill-name">Python / programming basics</span>
+          <span class="skill-badge">Technical</span>
+        </div>
+        <div class="level-dots" id="dots-py">
+          <div class="level-dot" onclick="setLevel('py',1)" onmouseover="hoverLevel('py',1)" onmouseout="resetHover('py')"></div>
+          <div class="level-dot" onclick="setLevel('py',2)" onmouseover="hoverLevel('py',2)" onmouseout="resetHover('py')"></div>
+          <div class="level-dot" onclick="setLevel('py',3)" onmouseover="hoverLevel('py',3)" onmouseout="resetHover('py')"></div>
+          <div class="level-dot" onclick="setLevel('py',4)" onmouseover="hoverLevel('py',4)" onmouseout="resetHover('py')"></div>
+          <div class="level-dot" onclick="setLevel('py',5)" onmouseover="hoverLevel('py',5)" onmouseout="resetHover('py')"></div>
+        </div>
+        <div class="level-labels"><span>No exposure</span><span>Familiar</span><span>Practiced</span><span>Proficient</span><span>Expert</span></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-header">
+          <span class="skill-name">Data analysis (Excel / SQL / Python)</span>
+          <span class="skill-badge">Technical</span>
+        </div>
+        <div class="level-dots" id="dots-data">
+          <div class="level-dot" onclick="setLevel('data',1)" onmouseover="hoverLevel('data',1)" onmouseout="resetHover('data')"></div>
+          <div class="level-dot" onclick="setLevel('data',2)" onmouseover="hoverLevel('data',2)" onmouseout="resetHover('data')"></div>
+          <div class="level-dot" onclick="setLevel('data',3)" onmouseover="hoverLevel('data',3)" onmouseout="resetHover('data')"></div>
+          <div class="level-dot" onclick="setLevel('data',4)" onmouseover="hoverLevel('data',4)" onmouseout="resetHover('data')"></div>
+          <div class="level-dot" onclick="setLevel('data',5)" onmouseover="hoverLevel('data',5)" onmouseout="resetHover('data')"></div>
+        </div>
+        <div class="level-labels"><span>No exposure</span><span>Familiar</span><span>Practiced</span><span>Proficient</span><span>Expert</span></div>
+      </div>
+
+      <div class="skill-card">
+        <div class="skill-card-header">
+          <span class="skill-name">Web development (HTML, CSS, JS)</span>
+          <span class="skill-badge">Technical</span>
+        </div>
+        <div class="level-dots" id="dots-web">
+          <div class="level-dot" onclick="setLevel('web',1)" onmouseover="hoverLevel('web',1)" onmouseout="resetHover('web')"></div>
+          <div class="level-dot" onclick="setLevel('web',2)" onmouseover="hoverLevel('web',2)" onmouseout="resetHover('web')"></div>
+          <div class="level-dot" onclick="setLevel('web',3)" onmouseover="hoverLevel('web',3)" onmouseout="resetHover('web')"></div>
+          <div class="level-dot" onclick="setLevel('web',4)" onmouseover="hoverLevel('web',4)" onmouseout="resetHover('web')"></div>
+          <div class="level-dot" onclick="setLevel('web',5)" onmouseover="hoverLevel('web',5)" onmouseout="resetHover('web')"></div>
+        </div>
+        <div class="level-labels"><span>No exposure</span><span>Familiar</span><span>Practiced</span><span>Proficient</span><span>Expert</span></div>
+      </div>
+    </div>
+
+    <div class="section-divider">Soft skills (universal — all fields)</div>
+
+    <div class="skill-card">
+      <div class="skill-card-header">
+        <span class="skill-name">Written communication</span>
+        <span class="skill-badge soft">Soft skill</span>
+      </div>
+      <div class="level-dots" id="dots-write">
+        <div class="level-dot" onclick="setLevel('write',1)" onmouseover="hoverLevel('write',1)" onmouseout="resetHover('write')"></div>
+        <div class="level-dot" onclick="setLevel('write',2)" onmouseover="hoverLevel('write',2)" onmouseout="resetHover('write')"></div>
+        <div class="level-dot" onclick="setLevel('write',3)" onmouseover="hoverLevel('write',3)" onmouseout="resetHover('write')"></div>
+        <div class="level-dot" onclick="setLevel('write',4)" onmouseover="hoverLevel('write',4)" onmouseout="resetHover('write')"></div>
+        <div class="level-dot" onclick="setLevel('write',5)" onmouseover="hoverLevel('write',5)" onmouseout="resetHover('write')"></div>
+      </div>
+      <div class="level-labels"><span>No exposure</span><span>Familiar</span><span>Practiced</span><span>Proficient</span><span>Expert</span></div>
+    </div>
+
+    <div class="skill-card">
+      <div class="skill-card-header">
+        <span class="skill-name">Teamwork & collaboration</span>
+        <span class="skill-badge soft">Soft skill</span>
+      </div>
+      <div class="level-dots" id="dots-team">
+        <div class="level-dot" onclick="setLevel('team',1)" onmouseover="hoverLevel('team',1)" onmouseout="resetHover('team')"></div>
+        <div class="level-dot" onclick="setLevel('team',2)" onmouseover="hoverLevel('team',2)" onmouseout="resetHover('team')"></div>
+        <div class="level-dot" onclick="setLevel('team',3)" onmouseover="hoverLevel('team',3)" onmouseout="resetHover('team')"></div>
+        <div class="level-dot" onclick="setLevel('team',4)" onmouseover="hoverLevel('team',4)" onmouseout="resetHover('team')"></div>
+        <div class="level-dot" onclick="setLevel('team',5)" onmouseover="hoverLevel('team',5)" onmouseout="resetHover('team')"></div>
+      </div>
+      <div class="level-labels"><span>No exposure</span><span>Familiar</span><span>Practiced</span><span>Proficient</span><span>Expert</span></div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goStep(4)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(6)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 6: Experience & Evidence
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-6">
+    <div class="step-eyebrow">Step 6 of 8 — Your experience</div>
+    <div class="step-title">What have you already done?</div>
+    <div class="step-subtitle">Projects, side hustles, clubs, volunteer work, church activities, family businesses — all of it counts. You don't need a formal job title to have real experience.</div>
+
+    <div class="form-group">
+      <label class="form-label">Describe a project or activity you're proud of (in any area)</label>
+      <textarea class="form-textarea" placeholder="e.g. I built a simple attendance app for my department using Google Sheets. It tracked 200+ students and saved the lecturer hours each week. I learned to use formulas and scripts." style="min-height: 110px;"></textarea>
+      <div class="helper-text">Doesn't need to be technical. A project could be organising an event, helping a family farm, running a social media page, or doing research for a class assignment.</div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Have you done any of these? (tick all that apply)</label>
+      <div style="margin-top: 10px;">
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">SIWES / IT placement (formal)</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Informal work experience / apprenticeship</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Freelance or paid gig work</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Student society / departmental leadership role</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Volunteer or community service work</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Online course certificate (Coursera, Udemy, etc.)</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">Personal project / portfolio item</span></div>
+        <div class="checkmark-row" onclick="toggleCheck(this)"><div class="custom-check"></div><span class="check-label">None of the above — and that's okay!</span></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Upload evidence (optional but highly recommended)</label>
+      <div class="helper-text" style="margin-bottom: 9px;">Certificate, transcript, GitHub link, portfolio, SIWES letter — anything that shows your work. Increases your Fit Score by up to 25 points.</div>
+      <div class="upload-zone" onclick="this.style.borderColor='var(--black)'">
+        <div class="upload-icon">📎</div>
+        <div class="upload-text"><strong>Click to upload</strong> or drag & drop here<br>PDF, DOCX, JPEG, PNG — max 5MB each</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Link to online work (optional)</label>
+      <input type="text" class="form-input" placeholder="https://github.com/yourname  or  linkedin.com/in/yourname" />
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goStep(5)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(7)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 7: Goals, Preferences & Availability
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-7">
+    <div class="step-eyebrow">Step 7 of 8 — Your goals</div>
+    <div class="step-title">What are you hoping to gain?</div>
+    <div class="step-subtitle">Help us find the right match — not just a placement. Your goals shape which organisations and tiers we recommend for you.</div>
+
+    <div class="form-group">
+      <label class="form-label">What's your primary goal for this internship?</label>
+      <div class="competency-grid">
+        <div class="competency-option" onclick="selectGoal(this)">
+          <div class="comp-level">1</div>
+          <div class="comp-text"><div class="comp-label">Explore the field</div><div class="comp-desc">I'm not sure yet — I want to see what the real work environment feels like</div></div>
+        </div>
+        <div class="competency-option" onclick="selectGoal(this)">
+          <div class="comp-level">2</div>
+          <div class="comp-text"><div class="comp-label">Build foundational skills</div><div class="comp-desc">I have some knowledge and want structured practice and mentorship</div></div>
+        </div>
+        <div class="competency-option" onclick="selectGoal(this)">
+          <div class="comp-level">3</div>
+          <div class="comp-text"><div class="comp-label">Apply what I know</div><div class="comp-desc">I feel ready to do real work and contribute meaningfully to a team</div></div>
+        </div>
+        <div class="competency-option" onclick="selectGoal(this)">
+          <div class="comp-level">4</div>
+          <div class="comp-text"><div class="comp-label">Accelerate toward a career</div><div class="comp-desc">I want a challenging placement that could lead to a job offer or references</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-divider">Placement preferences</div>
+
+    <div class="two-col">
+      <div class="form-group">
+        <label class="form-label">Preferred location</label>
+        <select class="form-select">
+          <option>Lagos (any area)</option>
+          <option>Lagos Island specifically</option>
+          <option>Lagos Mainland specifically</option>
+          <option>Open to other states</option>
+          <option>Remote / hybrid preferred</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Duration available</label>
+        <select class="form-select">
+          <option>4–6 weeks</option>
+          <option>8–12 weeks (SIWES standard)</option>
+          <option>3–6 months</option>
+          <option>Flexible / open</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Organisation type preference (pick up to 2)</label>
+      <div class="pill-group" id="org-pills">
+        <div class="pill" onclick="togglePill(this)">Government / MDAs</div>
+        <div class="pill" onclick="togglePill(this)">Private company (large)</div>
+        <div class="pill" onclick="togglePill(this)">Startup</div>
+        <div class="pill" onclick="togglePill(this)">NGO / nonprofit</div>
+        <div class="pill" onclick="togglePill(this)">Research institution</div>
+        <div class="pill" onclick="togglePill(this)">Hospital / clinic</div>
+        <div class="pill" onclick="togglePill(this)">Bank / financial firm</div>
+        <div class="pill" onclick="togglePill(this)">No preference</div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Is there anything you're worried about? (optional)</label>
+      <textarea class="form-textarea" placeholder="e.g. I'm concerned I don't have enough experience. / I've never worked in a professional setting before. / I'm not sure if my skills are good enough." style="min-height: 70px;"></textarea>
+      <div class="helper-text">This is private and just helps us write a better learning pathway for you. It's okay to be honest here.</div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goStep(6)">← Back</button>
+      <button class="btn btn-primary" onclick="goStep(8)">Continue →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       STEP 8: Review & Submit
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-8">
+    <div class="step-eyebrow">Step 8 of 8 — Almost there!</div>
+    <div class="step-title">Your profile is ready to submit 🎉</div>
+    <div class="step-subtitle">Here's a preview of your initial Fit Score and what happens after you submit. Everything gets refined once the verification stage begins.</div>
+
+    <div class="score-preview">
+      <div class="score-preview-title">Initial profile score preview</div>
+      <div class="score-row">
+        <div class="score-label">Academic alignment</div>
+        <div class="score-bar-wrap"><div class="score-bar-val" style="width:72%"></div></div>
+        <div class="score-num">72</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Self-reported skills</div>
+        <div class="score-bar-wrap"><div class="score-bar-val" style="width:58%"></div></div>
+        <div class="score-num">58</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Evidence uploaded</div>
+        <div class="score-bar-wrap"><div class="score-bar-val" style="width:40%"></div></div>
+        <div class="score-num">40</div>
+      </div>
+      <div class="score-row">
+        <div class="score-label">Goal alignment</div>
+        <div class="score-bar-wrap"><div class="score-bar-val" style="width:85%"></div></div>
+        <div class="score-num">85</div>
+      </div>
+      <div class="score-footer">
+        <span class="score-footer-label">Estimated starting tier</span>
+        <span class="tier-badge">Tier 1–2 (pending verification)</span>
+      </div>
+    </div>
+
+    <div class="section-divider" style="margin-top: 1.5rem;">What happens next</div>
+
+    <div class="verification-timeline">
+      <div class="vt-item">
+        <div class="vt-line-wrap">
+          <div class="vt-dot now">✓</div>
+          <div class="vt-connector"></div>
+        </div>
+        <div class="vt-content">
+          <div class="vt-tag tag-now">Now</div>
+          <div class="vt-title">Profile submitted</div>
+          <div class="vt-desc">Your self-reported data is stored. Initial Fit Score calculated using the Weighted Sum Model. You receive a preliminary tier estimate.</div>
+        </div>
+      </div>
+      <div class="vt-item">
+        <div class="vt-line-wrap">
+          <div class="vt-dot later">2</div>
+          <div class="vt-connector"></div>
+        </div>
+        <div class="vt-content">
+          <div class="vt-tag tag-later">Within 48 hrs</div>
+          <div class="vt-title">Automated diagnostic tasks</div>
+          <div class="vt-desc">Short field-specific tasks arrive by email. 15–20 minutes. Not a high-stakes exam — just brief real-world scenarios that confirm your skill claims.</div>
+        </div>
+      </div>
+      <div class="vt-item">
+        <div class="vt-line-wrap">
+          <div class="vt-dot later">3</div>
+          <div class="vt-connector"></div>
+        </div>
+        <div class="vt-content">
+          <div class="vt-tag tag-later">Week 1–2</div>
+          <div class="vt-title">Evidence review & matric verification</div>
+          <div class="vt-desc">LASU registry confirms your enrollment. Any uploaded certificates or GitHub portfolios are automatically cross-checked.</div>
+        </div>
+      </div>
+      <div class="vt-item">
+        <div class="vt-line-wrap">
+          <div class="vt-dot later">4</div>
+          <div class="vt-connector"></div>
+        </div>
+        <div class="vt-content">
+          <div class="vt-tag tag-later">Week 2–3</div>
+          <div class="vt-title">Final tier assignment & matching</div>
+          <div class="vt-desc">Your verified Fit Score determines your final tier. The system surfaces top 3–5 matched organisations. You review, rank preferences, and receive an offer.</div>
+        </div>
+      </div>
+      <div class="vt-item">
+        <div class="vt-line-wrap">
+          <div class="vt-dot later">5</div>
+        </div>
+        <div class="vt-content">
+          <div class="vt-tag tag-later">Ongoing</div>
+          <div class="vt-title">Internship + supervisor sign-off</div>
+          <div class="vt-desc">During placement, your supervisor provides mid- and end-of-internship assessments. Your competency rubric updates in real time. Your profile becomes a verified career record.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tier-grid" style="margin-top: 1.5rem;">
+      <div class="tier-card t1">
+        <div class="tier-label">Tier 1</div>
+        <div class="tier-desc">Exploratory. Guided. Structured mentorship. Ideal for early-stage students.</div>
+      </div>
+      <div class="tier-card t2">
+        <div class="tier-label">Tier 2</div>
+        <div class="tier-desc">Applied. Collaborative. Real deliverables with support. Most common placement.</div>
+      </div>
+      <div class="tier-card t3">
+        <div class="tier-label">Tier 3</div>
+        <div class="tier-desc">Advanced. Independent. High-impact work. Competitive placement.</div>
+      </div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-ghost" onclick="goStep(7)">← Back</button>
+      <button class="btn btn-primary" onclick="submitProfile()">Submit my profile →</button>
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════════════
+       SUCCESS SCREEN
+  ══════════════════════════════════════════════════ -->
+  <div class="step" id="step-success">
+    <div class="success-screen">
+      <div class="success-icon">
+        <svg width="24" height="24" viewBox="0 0 28 28" fill="none">
+          <path d="M6 14l5 5 11-11" stroke="#0A0A0A" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="success-title">You're in the system, Adaeze!</div>
+      <div class="success-subtitle">Your profile has been submitted. Your initial Fit Score is <strong>68/100</strong> — placing you in the <strong>Tier 1–2 range</strong>. Check your LASU email for your diagnostic task within 48 hours.</div>
+
+      <div class="next-steps">
+        <div class="ns-card">
+          <div class="ns-step">Next step 1</div>
+          <div class="ns-title">Check your email</div>
+          <div class="ns-desc">Diagnostic task arrives within 48 hours. Takes 15–20 minutes.</div>
+        </div>
+        <div class="ns-card">
+          <div class="ns-step">Next step 2</div>
+          <div class="ns-title">Upload more evidence</div>
+          <div class="ns-desc">Log in to your dashboard to add certificates, links, or references anytime.</div>
+        </div>
+        <div class="ns-card">
+          <div class="ns-step">Next step 3</div>
+          <div class="ns-title">Track your matches</div>
+          <div class="ns-desc">Your top matched organisations will appear in your dashboard within 2 weeks.</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 1.5rem;">
+        <button class="btn btn-primary" onclick="sendPrompt('Can you explain how the Weighted Sum Model uses the data I just collected in the onboarding form to compute the Fit Score?')">How does my Fit Score get calculated? ↗</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+let currentStep = 1;
+let selectedFamily = null;
+const skillLevels = {};
+
+function goStep(n) {
+  document.getElementById('step-' + currentStep).classList.remove('active');
+  currentStep = n;
+  const target = n === 'success' ? document.getElementById('step-success') : document.getElementById('step-' + n);
+  target.classList.add('active');
+  const pct = n === 'success' ? 100 : (n / 8 * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  const counter = document.getElementById('step-counter');
+  if (n === 'success') { counter.textContent = 'Complete!'; }
+  else { counter.textContent = 'Step ' + n + ' of 8'; }
+}
+
+function submitProfile() {
+  document.getElementById('step-8').classList.remove('active');
+  document.getElementById('step-success').classList.add('active');
+  document.getElementById('progress-bar').style.width = '100%';
+  document.getElementById('step-counter').textContent = 'Complete!';
+}
+
+function selectFamily(el, family) {
+  document.querySelectorAll('.family-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedFamily = family;
+}
+
+function selectSubrole(el) {
+  const panel = el.closest('.dynamic-panel');
+  panel.querySelectorAll('.subrole-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function selectGoal(el) {
+  document.querySelectorAll('.competency-option').forEach(o => o.classList.remove('selected'));
+  el.classList.add('selected');
+}
+
+function switchFamilyTab(tab, panelId) {
+  document.querySelectorAll('#step-3 .tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.querySelectorAll('#step-3 .dynamic-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+}
+
+function switchCourseTab(tab, panelId) {
+  document.querySelectorAll('#step-4 .tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.querySelectorAll('#step-4 .dynamic-panel').forEach(p => p.classList.remove('active'));
+  document.getElementById(panelId).classList.add('active');
+}
+
+function toggleCheck(row) {
+  const box = row.querySelector('.custom-check');
+  box.classList.toggle('checked');
+}
+
+function togglePill(el) {
+  el.classList.toggle('selected');
+}
+
+function setLevel(skillId, level) {
+  skillLevels[skillId] = level;
+  const dots = document.getElementById('dots-' + skillId).querySelectorAll('.level-dot');
+  dots.forEach((d, i) => {
+    d.classList.toggle('filled', i < level);
+    d.classList.remove('hover-fill');
+  });
+}
+
+function hoverLevel(skillId, level) {
+  const current = skillLevels[skillId] || 0;
+  const dots = document.getElementById('dots-' + skillId).querySelectorAll('.level-dot');
+  dots.forEach((d, i) => {
+    if (i < current) { d.classList.add('filled'); d.classList.remove('hover-fill'); }
+    else if (i < level) { d.classList.remove('filled'); d.classList.add('hover-fill'); }
+    else { d.classList.remove('filled'); d.classList.remove('hover-fill'); }
+  });
+}
+
+function resetHover(skillId) {
+  const current = skillLevels[skillId] || 0;
+  const dots = document.getElementById('dots-' + skillId).querySelectorAll('.level-dot');
+  dots.forEach((d, i) => {
+    d.classList.toggle('filled', i < current);
+    d.classList.remove('hover-fill');
+  });
+}
+</script>
+</body>
+</html>
